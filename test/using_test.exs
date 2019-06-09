@@ -59,7 +59,7 @@ defmodule XDRUsingTest do
   end
 
   test "resolves a person" do
-    person_type = CustomXDR.resolve_type!("Person")
+    {:ok, person_type} = CustomXDR.resolve_type("Person")
     address = person_type.fields[:address]
     %XDR.Type.VariableOpaque{type_name: "VariableOpaque"} = address.fields[:city]
   end
@@ -80,8 +80,8 @@ defmodule XDRUsingTest do
   end
 
   test "builds a person" do
-    person =
-      CustomXDR.build_value!(
+    {:ok, person} =
+      CustomXDR.build_value(
         "Person",
         name: "Jason",
         age: 42,
@@ -96,5 +96,9 @@ defmodule XDRUsingTest do
 
     city = person.fields[:address].fields[:city].value
     assert city == "New Orleans"
+
+    {:ok, encoding} = CustomXDR.encode(person)
+    {:ok, decoded} = CustomXDR.decode("Person", encoding)
+    assert decoded == person
   end
 end

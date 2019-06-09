@@ -22,4 +22,22 @@ defimpl XDR.Type, for: BitString do
     {:error, reason} = build_value(type, value)
     raise reason
   end
+
+  def encode(_) do
+    {:error, "cannot encode an unresolved custom type"}
+  end
+
+  def encode!(type) do
+    {:error, reason} = encode(type)
+    raise reason
+  end
+
+  def decode(_, _) do
+    {:error, "cannot decode an unresolved custom type"}
+  end
+
+  def decode!(type, encoding) do
+    {:error, reason} = decode(type, encoding)
+    raise reason
+  end
 end

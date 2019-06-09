@@ -29,8 +29,10 @@ defmodule XDR do
 
       # hopefully we can doc these
       def build_value(name_or_type, value) do
-        type = resolve_type(name_or_type)
-        XDR.Type.build_value(type, value)
+        case resolve_type(name_or_type) do
+          {:ok, type} -> XDR.Type.build_value(type, value)
+          error -> error
+        end
       end
 
       def build_value!(name_or_type, value) do
@@ -38,11 +40,29 @@ defmodule XDR do
         XDR.Type.build_value!(type, value)
       end
 
-      # def encode_value(type_with_value) do
-      # end
+      def encode(type_with_value) do
+        XDR.Type.encode(type_with_value)
+      end
 
-      # def decode(name_or_type, encoded) when is_binary(encoded) do
-      # end
+      def encode!(type_with_value) do
+        XDR.Type.encode!(type_with_value)
+      end
+
+      def decode(name_or_type, encoding) do
+        with {:ok, type} <- resolve_type(name_or_type),
+             {:ok, type_with_value, ""} <- XDR.Type.decode(type, encoding) do
+          {:ok, type_with_value}
+        else
+          error -> error
+        end
+      end
+
+      def decode!(name_or_type, encoding) do
+        case decode(name_or_type, encoding) do
+          {:ok, type_with_value} -> type_with_value
+          {:error, reason} -> raise reason
+        end
+      end
     end
   end
 
