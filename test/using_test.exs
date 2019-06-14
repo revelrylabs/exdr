@@ -1,44 +1,40 @@
 defmodule CustomXDR do
   use XDR
 
-  define_type("Number", :int)
-  define_type("Name", :variable_opaque, 100)
+  define_type("Number", Int)
+  define_type("Name", VariableOpaque, 100)
 
   define_type(
     "TestScore",
-    :struct,
+    Struct,
     name: "Name",
     score: "Number",
-    grade: build_type(:variable_opaque)
+    grade: build_type(VariableOpaque)
   )
 
   define_type(
     "Person",
-    :struct,
+    Struct,
     age: "Number",
     name: "Name",
     address:
       build_type(
-        :struct,
+        Struct,
         nick_name: "Name",
-        street: build_type(:variable_opaque),
-        city: build_type(:variable_opaque),
-        state: build_type(:variable_opaque),
-        postal_code: build_type(:variable_opaque)
+        street: build_type(VariableOpaque),
+        city: build_type(VariableOpaque),
+        state: build_type(VariableOpaque),
+        postal_code: build_type(VariableOpaque)
       )
   )
-
-  def get_types do
-    @custom_types
-  end
 end
 
 defmodule XDRUsingTest do
   use ExUnit.Case
 
   test "registers types properly" do
-    assert %{"Number" => %XDR.Type.Int{}} = CustomXDR.get_types()
-    assert %{"Name" => %XDR.Type.VariableOpaque{max_len: 100}} = CustomXDR.get_types()
+    assert %{"Number" => %XDR.Type.Int{}} = CustomXDR.custom_types()
+    assert %{"Name" => %XDR.Type.VariableOpaque{max_len: 100}} = CustomXDR.custom_types()
     assert CustomXDR.resolve_type!("Number") == %XDR.Type.Int{type_name: "Number"}
 
     assert CustomXDR.resolve_type!("Name") == %XDR.Type.VariableOpaque{

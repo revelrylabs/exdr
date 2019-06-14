@@ -1,11 +1,11 @@
 defmodule XDR.Type.Struct do
   defstruct fields: [], type_name: "Struct"
 
-  def define_type(fields) do
-    %__MODULE__{fields: fields}
-  end
-
   defimpl XDR.Type do
+    def build_type(type, fields) when is_list(fields) do
+      %{type | fields: fields}
+    end
+
     def resolve_type!(type, %{} = custom_types) do
       resolved_fields =
         type.fields

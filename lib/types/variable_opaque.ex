@@ -3,19 +3,21 @@ defmodule XDR.Type.VariableOpaque do
 
   defstruct length: nil, max_len: @max, type_name: "VariableOpaque", value: nil
 
-  def define_type() do
-    %__MODULE__{}
-  end
+  defimpl XDR.Type do
+    @max trunc(:math.pow(2, 32) - 1)
 
-  def define_type(max_len) when is_integer(max_len) do
-    if max_len > @max do
-      raise ArgumentError, message: "max length value must not be larger than #{@max}"
+    def build_type(type, max_len) when is_integer(max_len) do
+      if max_len > @max do
+        raise ArgumentError, message: "max length value must not be larger than #{@max}"
+      end
+
+      %{type | max_len: max_len}
     end
 
-    %__MODULE__{max_len: max_len}
-  end
+    def build_type(type, []) do
+      type
+    end
 
-  defimpl XDR.Type do
     def resolve_type(type, _) do
       {:ok, type}
     end

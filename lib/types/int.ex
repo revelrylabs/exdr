@@ -1,10 +1,6 @@
 defmodule XDR.Type.Int do
   defstruct type_name: "Int", value: nil
 
-  def define_type() do
-    %__MODULE__{}
-  end
-
   def encode(value) when is_integer(value) do
     <<value::big-signed-integer-size(32)>>
   end
@@ -22,6 +18,10 @@ defmodule XDR.Type.Int do
   end
 
   defimpl XDR.Type do
+    def build_type(type, _options \\ []) do
+      type
+    end
+
     def resolve_type(type, _) do
       {:ok, type}
     end

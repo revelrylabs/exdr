@@ -14,6 +14,15 @@ defimpl XDR.Type, for: BitString do
     end
   end
 
+  def build_type(_, _) do
+    {:error, "cannot build a custom type directly"}
+  end
+
+  def build_type!(type, value) do
+    {:error, reason} = build_type(type, value)
+    raise reason
+  end
+
   def build_value(_, _) do
     {:error, "cannot build a value for an unresolved custom type"}
   end
