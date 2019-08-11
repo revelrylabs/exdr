@@ -1,5 +1,5 @@
 defmodule CustomXDR do
-  use XDR
+  use XDR.Base
 
   define_type("Number", Int)
   define_type("Name", VariableOpaque, 100)
@@ -31,6 +31,14 @@ end
 
 defmodule XDRUsingTest do
   use ExUnit.Case
+
+  @address_value [
+    nick_name: "Home",
+    street: "4200 Canal St",
+    city: "New Orleans",
+    state: "LA",
+    postal_code: "70119"
+  ]
 
   test "registers types properly" do
     assert %{"Number" => %XDR.Type.Int{}} = CustomXDR.custom_types()
@@ -81,13 +89,7 @@ defmodule XDRUsingTest do
         "Person",
         name: "Jason",
         age: 42,
-        address: [
-          nick_name: "Home",
-          street: "4200 Canal St",
-          city: "New Orleans",
-          state: "LA",
-          postal_code: "70119"
-        ]
+        address: @address_value
       )
 
     city = person.fields[:address].fields[:city].value
@@ -96,5 +98,42 @@ defmodule XDRUsingTest do
     {:ok, encoding} = CustomXDR.encode(person)
     {:ok, decoded} = CustomXDR.decode("Person", encoding)
     assert decoded == person
+
+    # NOTE: this checks that the fields stay in the order
+    # given in the "person" definition (age then name)
+    # even though the values are provided in a different order in build_value
+    assert [
+             age: 42,
+             name: "Jason",
+             address: @address_value
+           ] = CustomXDR.extract_value!(person)
+  end
+
+  test "reports errors properly with ad hoc types" do
+    {:error, error} =
+      CustomXDR.build_value(
+        "Person",
+        name: "Jason",
+        age: 42,
+        address: Keyword.put(@address_value, :city, 123)
+      )
+
+    assert error.path == "address.city"
+    assert error.message == "value must be a binary"
+    assert error.type == "VariableOpaque"
+  end
+
+  test "reports errors properly with named custom types" do
+    {:error, error} =
+      CustomXDR.build_value(
+        "Person",
+        name: "Jason",
+        age: 42,
+        address: Keyword.put(@address_value, :nick_name, 123)
+      )
+
+    assert error.path == "address.nick_name"
+    assert error.message == "value must be a binary"
+    assert error.type == "Name"
   end
 end
