@@ -55,19 +55,10 @@ defmodule XDR.Type.VariableOpaque do
     end
 
     def decode!(type, encoding_with_length) do
-      with {:ok, length, encoding} <- XDR.Type.Int.decode(encoding_with_length),
-           <<value::binary-size(length), rest::binary>> = encoding,
-           type_with_value <- build_value!(type, value) do
-        {type_with_value, rest}
-      else
-        {:error, reason} ->
-          raise reason
-
-        _ ->
-          raise XDR.Error,
-            message: "invalid encoding",
-            type: "VariableOpaque"
-      end
+      {length, encoding} = XDR.Type.Int.decode!(encoding_with_length)
+      <<value::binary-size(length), rest::binary>> = encoding
+      type_with_value = build_value!(type, value)
+      {type_with_value, rest}
     end
   end
 end

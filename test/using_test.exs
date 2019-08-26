@@ -27,6 +27,34 @@ defmodule CustomXDR do
         postal_code: build_type(VariableOpaque)
       )
   )
+
+  define_type(
+    "Company",
+    Struct,
+    name: "Name"
+  )
+
+  define_type(
+    "AccountType",
+    Enum,
+    account_type_person: 0,
+    account_type_company: 1
+  )
+
+  define_type(
+    "AccountOwner",
+    Union,
+    switch_name: :type,
+    switch_type: "AccountType",
+    switches: [
+      account_type_person: :person,
+      account_type_company: :company
+    ],
+    arms: [
+      person: "Person",
+      company: "Company"
+    ]
+  )
 end
 
 defmodule XDRUsingTest do
@@ -107,6 +135,22 @@ defmodule XDRUsingTest do
              name: "Jason",
              address: @address_value
            ] = CustomXDR.extract_value!(person)
+  end
+
+  test "builds an account" do
+    owner_company = CustomXDR.build_value!(
+      "AccountOwner",
+      {:account_type_company, name: "Myloft & Hey"}
+    )
+    encoded_owner = CustomXDR.encode!(owner_company)
+    encoded_switch = XDR.Type.Int.encode(1)
+    encoded_name =
+      "Name"
+      |> CustomXDR.build_value!("Myloft & Hey")
+      |> CustomXDR.encode!()
+
+    assert encoded_owner == encoded_switch <> encoded_name
+    assert owner_company == CustomXDR.decode!("AccountOwner", encoded_owner)
   end
 
   test "reports errors properly with ad hoc types" do

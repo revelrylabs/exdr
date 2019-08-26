@@ -8,7 +8,7 @@ defmodule XDR.Base do
   defmacro __using__(_opts) do
     quote do
       import XDR.Base
-      alias XDR.Type.{Struct, Int, VariableOpaque}
+      alias XDR.Type.{Enum, Int, Struct, Union, VariableOpaque}
 
       @custom_types %{}
 

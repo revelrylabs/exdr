@@ -9,12 +9,12 @@ defmodule XDR.Type.Int do
     encode(value)
   end
 
-  def decode(<<value::big-signed-integer-size(32), rest::binary>>) do
-    {:ok, value, rest}
+  def decode!(<<value::big-signed-integer-size(32), rest::binary>>) do
+    {value, rest}
   end
 
-  def decode(_) do
-    {:error, "Invalid encoding"}
+  def decode!(_) do
+    raise "Ran out of bytes while trying to read an Int"
   end
 
   defimpl XDR.Type do
@@ -41,16 +41,9 @@ defmodule XDR.Type.Int do
     end
 
     def decode!(type, encoding) do
-      with {:ok, value, rest} <- XDR.Type.Int.decode(encoding),
-           type_with_value <- build_value!(type, value) do
-        {type_with_value, rest}
-      else
-        {:error, message} ->
-          raise XDR.Error,
-            message: message,
-            type: type.type_name,
-            data: encoding
-      end
+      {value, rest} = XDR.Type.Int.decode!(encoding)
+      type_with_value = build_value!(type, value)
+      {type_with_value, rest}
     end
   end
 end
