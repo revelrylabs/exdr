@@ -1,15 +1,10 @@
 defmodule XDR.Type.Union do
-  # TODO: switch_type and switch_value could both be stored in one place
-  # same with arms... we can store the value in the type of the selected arm
-  # but naming gets kinda hard and annoying
-
   # TODO: default_arm
   # TODO: handle VOID
   defstruct arms: [],
             switches: [],
             switch_name: nil,
-            switch_type: nil,
-            switch_value: nil,
+            switch: nil,
             type_name: "Union",
             value: nil
 
@@ -59,7 +54,7 @@ defmodule XDR.Type.Union do
         arms: options[:arms],
         switches: options[:switches],
         switch_name: options[:switch_name] || nil,
-        switch_type: options[:switch_type]
+        switch: options[:switch_type]
       })
     end
 
@@ -68,37 +63,37 @@ defmodule XDR.Type.Union do
         type.arms
         |> Enum.map(&resolve_type_wrap(&1, custom_types, :arms))
 
-      switch_type = resolve_type_wrap(type.switch_type, custom_types, :switch_type)
+      switch_type = resolve_type_wrap(type.switch, custom_types, :switch_type)
 
-      %{type | arms: arms, switch_type: switch_type}
+      %{type | arms: arms, switch: switch_type}
     end
 
     def build_value!(type, {switch_raw, arm_raw}) do
-      switch_value = build_value_wrap(type.switch_type, switch_raw, :switch_value)
+      switch_value = build_value_wrap(type.switch, switch_raw, :switch_value)
 
       value =
         Union.get_value_type(type, switch_value)
         |> XDR.Type.build_value!(arm_raw)
 
-      %{type | switch_value: switch_value, value: value}
+      %{type | switch: switch_value, value: value}
     end
 
     def extract_value!(%{value: value}) do
       XDR.Type.extract_value!(value)
     end
 
-    def encode!(%{switch_value: switch_value, value: value}) do
+    def encode!(%{switch: switch_value, value: value}) do
       switch_encoding = encode_wrap(switch_value, :switch_value)
       value_encoding = XDR.Type.encode!(value)
       switch_encoding <> value_encoding
     end
 
     def decode!(type, encoding) do
-      {switch_value, switch_rest} = XDR.Type.decode!(type.switch_type, encoding)
+      {switch_value, switch_rest} = XDR.Type.decode!(type.switch, encoding)
       value_type = Union.get_value_type(type, switch_value)
       {value, rest} = XDR.Type.decode!(value_type, switch_rest)
 
-      {%{type | switch_value: switch_value, value: value}, rest}
+      {%{type | switch: switch_value, value: value}, rest}
     end
 
     # private functions to handle wrapping & propagating errors
