@@ -1,6 +1,5 @@
 defmodule XDR.Type.Union do
   # TODO: default_arm
-  # TODO: handle VOID
   defstruct arms: [],
             switches: [],
             switch_name: nil,
@@ -11,7 +10,7 @@ defmodule XDR.Type.Union do
   def validate_type_options!(options) do
     options
     |> require!(:arms)
-    |> require_list!(:arms)
+    |> require_keyword_list!(:arms)
     |> require!(:switches)
     |> require_list!(:switches)
     |> require!(:switch_type)
@@ -19,10 +18,17 @@ defmodule XDR.Type.Union do
 
   def get_value_type(type, switch_type_with_value) do
     type_value = XDR.extract_value!(switch_type_with_value)
-    arm_key = type.switches[type_value]
-    type.arms[arm_key]
+    {_switch_val, arm_key} = Enum.find(type.switches, fn {key, _val} -> key == type_value end)
+
+    case arm_key do
+      XDR.Type.Void -> struct(arm_key)
+      %XDR.Type.Void{} -> arm_key
+      _ -> type.arms[arm_key]
+    end
   end
 
+  # TODO: These validations can be shared with a little refactoring
+  # but maybe they're not needed in the other types?
   defp require!(list, key) do
     if !Keyword.has_key?(list, key) do
       raise %XDR.Error{message: "key #{key} is required", data: list, type: "Union"}
@@ -32,6 +38,18 @@ defmodule XDR.Type.Union do
   end
 
   defp require_list!(list, key) do
+    if !is_list(list[key]) do
+      raise %XDR.Error{
+        message: "value of #{key} must be a list",
+        data: list[key],
+        type: "Union"
+      }
+    end
+
+    list
+  end
+
+  defp require_keyword_list!(list, key) do
     if !Keyword.keyword?(list[key]) do
       raise %XDR.Error{
         message: "value of #{key} must be a keyword list",
@@ -73,7 +91,7 @@ defmodule XDR.Type.Union do
 
       value =
         Union.get_value_type(type, switch_value)
-        |> XDR.Type.build_value!(arm_raw)
+        |> XDR.build_value!(arm_raw)
 
       %{type | switch: switch_value, value: value}
     end
@@ -121,7 +139,7 @@ defmodule XDR.Type.Union do
     end
 
     defp build_value_wrap(sub_type, value, key) do
-      XDR.Type.build_value!(sub_type, value)
+      XDR.build_value!(sub_type, value)
     rescue
       error -> reraise wrap_error(error, key), __STACKTRACE__
     end

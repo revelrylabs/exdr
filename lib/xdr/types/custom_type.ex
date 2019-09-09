@@ -16,7 +16,7 @@ defimpl XDR.Type, for: BitString do
   end
 
   def extract_value!(_) do
-    raise "cannot extract an unresolved custom types"
+    raise "cannot extract an unresolved custom type"
   end
 
   def encode!(_) do

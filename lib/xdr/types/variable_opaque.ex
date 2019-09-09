@@ -1,3 +1,4 @@
+# TODO: Pad the end with 0-bytes to make the total length a multiple of 4 bytes
 defmodule XDR.Type.VariableOpaque do
   @max trunc(:math.pow(2, 32) - 1)
 
@@ -45,7 +46,7 @@ defmodule XDR.Type.VariableOpaque do
 
     def encode!(%XDR.Type.VariableOpaque{length: length, value: value})
         when is_integer(length) and is_binary(value) do
-      XDR.Type.Int.encode(length) <> value
+      XDR.Type.Int.encode(length) <> value <> XDR.padding(length)
     end
 
     def encode!(_) do
@@ -56,7 +57,11 @@ defmodule XDR.Type.VariableOpaque do
 
     def decode!(type, encoding_with_length) do
       {length, encoding} = XDR.Type.Int.decode!(encoding_with_length)
-      <<value::binary-size(length), rest::binary>> = encoding
+      padding_length = XDR.padding_length(length)
+
+      <<value::binary-size(length), _padding::binary-size(padding_length), rest::binary>> =
+        encoding
+
       type_with_value = build_value!(type, value)
       {type_with_value, rest}
     end

@@ -31,6 +31,7 @@ defmodule XDR.Type.Enum do
 
     def decode!(type, encoding) do
       {int_val, rest} = XDR.Type.Int.decode!(encoding)
+
       value =
         type.options
         |> Enum.find(fn {_key, val} -> val == int_val end)
@@ -40,4 +41,3 @@ defmodule XDR.Type.Enum do
     end
   end
 end
-

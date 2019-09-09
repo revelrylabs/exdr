@@ -51,7 +51,7 @@ defmodule XDR.Type.Struct do
     end
 
     defp build_value_wrap({key, sub_type}, values) do
-      {key, XDR.Type.build_value!(sub_type, values[key])}
+      {key, XDR.build_value!(sub_type, values[key])}
     rescue
       error -> reraise XDR.Error.wrap(error, key), __STACKTRACE__
     end

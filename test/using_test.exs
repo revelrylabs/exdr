@@ -3,13 +3,15 @@ defmodule CustomXDR do
 
   define_type("Number", Int)
   define_type("Name", VariableOpaque, 100)
+  define_type("TheMagicNumber", Const, 42)
 
   define_type(
     "TestScore",
     Struct,
     name: "Name",
     score: "Number",
-    grade: build_type(VariableOpaque)
+    grade: build_type(VariableOpaque),
+    nothing: build_type(Void)
   )
 
   define_type(
@@ -35,6 +37,20 @@ defmodule CustomXDR do
   )
 
   define_type(
+    "FiveNames",
+    Array,
+    type: "Name",
+    size: 5
+  )
+
+  define_type(
+    "SomeNames",
+    VariableArray,
+    type: "Name",
+    max_size: 100
+  )
+
+  define_type(
     "AccountType",
     Enum,
     account_type_person: 0,
@@ -54,6 +70,28 @@ defmodule CustomXDR do
       person: "Person",
       company: "Company"
     ]
+  )
+
+  define_type(
+    "AccountOwnerTwo",
+    Union,
+    switch_name: :type,
+    switch_type: build_type(Int),
+    switches: [
+      {0, :person},
+      {1, :company},
+      {2, Void}
+    ],
+    arms: [
+      person: "Person",
+      company: "Company"
+    ]
+  )
+
+  define_type(
+    "OptionalAccountOwner",
+    Optional,
+    "AccountOwner"
   )
 end
 
@@ -84,7 +122,8 @@ defmodule XDRUsingTest do
              fields: [
                name: %XDR.Type.VariableOpaque{max_len: 100, type_name: "Name"},
                score: %XDR.Type.Int{type_name: "Number"},
-               grade: %XDR.Type.VariableOpaque{type_name: "VariableOpaque"}
+               grade: %XDR.Type.VariableOpaque{type_name: "VariableOpaque"},
+               nothing: %XDR.Type.Void{type_name: "Void"}
              ],
              type_name: "TestScore"
            }
@@ -101,14 +140,18 @@ defmodule XDRUsingTest do
       CustomXDR.build_value!(
         "TestScore",
         name: "Jason",
-        score: 42,
-        grade: "F"
+        score: CustomXDR.const("TheMagicNumber"),
+        grade: "F",
+        nothing: nil
       )
 
-    %XDR.Type.Struct{fields: [name: name, score: score, grade: grade]} = test_score
-    %XDR.Type.Int{value: 42} = score
-    %XDR.Type.VariableOpaque{value: "Jason"} = name
-    %XDR.Type.VariableOpaque{value: "F"} = grade
+    assert %XDR.Type.Struct{fields: [name: name, score: score, grade: grade, nothing: nothing]} =
+             test_score
+
+    assert %XDR.Type.Int{value: 42} = score
+    assert %XDR.Type.VariableOpaque{value: "Jason"} = name
+    assert %XDR.Type.VariableOpaque{value: "F"} = grade
+    assert %XDR.Type.Void{} = nothing
   end
 
   test "builds a person" do
@@ -138,12 +181,15 @@ defmodule XDRUsingTest do
   end
 
   test "builds an account" do
-    owner_company = CustomXDR.build_value!(
-      "AccountOwner",
-      {:account_type_company, name: "Myloft & Hey"}
-    )
+    owner_company =
+      CustomXDR.build_value!(
+        "AccountOwner",
+        {:account_type_company, name: "Myloft & Hey"}
+      )
+
     encoded_owner = CustomXDR.encode!(owner_company)
     encoded_switch = XDR.Type.Int.encode(1)
+
     encoded_name =
       "Name"
       |> CustomXDR.build_value!("Myloft & Hey")
@@ -151,6 +197,92 @@ defmodule XDRUsingTest do
 
     assert encoded_owner == encoded_switch <> encoded_name
     assert owner_company == CustomXDR.decode!("AccountOwner", encoded_owner)
+  end
+
+  test "builds an account with int switch" do
+    owner_company =
+      CustomXDR.build_value!(
+        "AccountOwnerTwo",
+        {1, name: "Myloft and Hey"}
+      )
+
+    encoded_owner = CustomXDR.encode!(owner_company)
+    encoded_switch = XDR.Type.Int.encode(1)
+
+    encoded_name =
+      "Name"
+      |> CustomXDR.build_value!("Myloft and Hey")
+      |> CustomXDR.encode!()
+
+    assert encoded_owner == encoded_switch <> encoded_name
+    assert owner_company == CustomXDR.decode!("AccountOwnerTwo", encoded_owner)
+    assert rem(byte_size(encoded_owner), 4) == 0
+  end
+
+  test "builds an account with void arm" do
+    owner_company =
+      CustomXDR.build_value!(
+        "AccountOwnerTwo",
+        {2, nil}
+      )
+
+    encoded_owner = CustomXDR.encode!(owner_company)
+    encoded_switch = XDR.Type.Int.encode(2)
+    encoded_name = ""
+
+    assert encoded_owner == encoded_switch <> encoded_name
+    assert owner_company == CustomXDR.decode!("AccountOwnerTwo", encoded_owner)
+    assert rem(byte_size(encoded_owner), 4) == 0
+  end
+
+  test "builds an optional account owner w/o a value" do
+    non_owner =
+      CustomXDR.build_value!(
+        "OptionalAccountOwner",
+        {false, nil}
+      )
+
+    encoded_non_owner = CustomXDR.encode!(non_owner)
+    assert encoded_non_owner == <<0, 0, 0, 0>>
+    assert non_owner == CustomXDR.decode!("OptionalAccountOwner", encoded_non_owner)
+  end
+
+  test "builds an optional account owner with a value" do
+    owner =
+      CustomXDR.build_value!(
+        "OptionalAccountOwner",
+        {true, {:account_type_company, name: "Myloft & Hey"}}
+      )
+
+    encoded = CustomXDR.encode!(owner)
+    encoded_bool = XDR.Type.Int.encode(1)
+    encoded_switch = XDR.Type.Int.encode(1)
+
+    encoded_name =
+      "Name"
+      |> CustomXDR.build_value!("Myloft & Hey")
+      |> CustomXDR.encode!()
+
+    assert encoded == encoded_bool <> encoded_switch <> encoded_name
+    assert owner == CustomXDR.decode!("OptionalAccountOwner", encoded)
+  end
+
+  test "defines fixed arrays" do
+    name_list = ~w(Marvin Arthur Ford Trillian Zaphod)
+    names = CustomXDR.build_value!("FiveNames", name_list)
+    encoded = CustomXDR.encode!(names)
+    assert <<0, 0, 0, 6>> <> "Marvin" <> rest = encoded
+    assert names == CustomXDR.decode!("FiveNames", encoded)
+    assert CustomXDR.extract_value!(names) == name_list
+  end
+
+  test "defines variable-length arrays" do
+    name_list = ~w(Marvin Arthur Ford Trillian Zaphod)
+    names = CustomXDR.build_value!("SomeNames", name_list)
+    encoded = CustomXDR.encode!(names)
+    assert <<0, 0, 0, 5>> <> <<0, 0, 0, 6>> <> "Marvin" <> rest = encoded
+    assert names == CustomXDR.decode!("SomeNames", encoded)
+    assert CustomXDR.extract_value!(names) == name_list
   end
 
   test "reports errors properly with ad hoc types" do

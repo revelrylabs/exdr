@@ -8,7 +8,19 @@ defmodule XDR.Base do
   defmacro __using__(_opts) do
     quote do
       import XDR.Base
-      alias XDR.Type.{Enum, Int, Struct, Union, VariableOpaque}
+
+      alias XDR.Type.{
+        Array,
+        Const,
+        Enum,
+        Int,
+        Optional,
+        Struct,
+        Union,
+        VariableArray,
+        VariableOpaque,
+        Void
+      }
 
       @custom_types %{}
 
@@ -58,6 +70,10 @@ defmodule XDR.Base do
         {:ok, decode!(name_or_type, encoded)}
       rescue
         error -> {:error, error}
+      end
+
+      def const(name) do
+        resolve_type!(name)
       end
     end
   end

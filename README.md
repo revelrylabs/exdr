@@ -22,9 +22,33 @@ be found at [https://hexdocs.pm/xdr](https://hexdocs.pm/xdr).
 
 
 CURRENT STATUS:
-* looks like union is working, though I may want to go back and refactor b/c we're storing
-  types and values in separate places right now, while the underlying structs can accommodate
-  both type and value in one place. maybe rename
-    switches -> switch_options
-    switch_type and switch_value -> switch
-    remove value and store it in the correct arm
+* Grind through the remaining types
+* TODO: union default branch?
+* Update xdrgen to make sure it's still compat
+* Pull in the stellar defs as a test fixture and write some tests around them
+* Organize & doc
+
+Spec: https://tools.ietf.org/html/rfc4506
+Current state of xdrgen: https://gist.github.com/grossvogel/1c6a16f54b94e7da53e0a12e19f9c311
+JS xdr source: https://github.com/stellar/js-xdr/tree/master/src
+
+types:
+- [X] Integer
+- [ ] Unsigned Integer
+- [X] Enumeration
+- [ ] Boolean
+- [ ] Hyper Integer and Unsigned Hyper Integer
+- [ ] Floating-Point
+- [ ] Double-Precision Floating-Point
+- [ ] Quadruple-Precision Floating-Point
+- [ ] Fixed-Length Opaque Data
+- [X] Variable-Length Opaque Data
+- [ ] String
+- [X] Fixed-Length Array
+- [X] Variable-Length Array
+- [X] Structure
+- [X] Discriminated Union
+- [X] Void
+- [X] Constant (no examples in Stellar?)
+- [X] Typedef
+- [X] Optional-Data
