@@ -6,7 +6,14 @@ defmodule XDR.Type.Array do
   defstruct type_name: "Array", length: nil, data_type: nil, values: []
 
   defimpl XDR.Type do
-    def build_type(type, type: data_type, size: length) when is_integer(length) do
+    def build_type(%{type_name: name} = type, options) do
+      data_type = Keyword.get(options, :type)
+      length = Keyword.get(options, :length)
+      unless data_type && length do
+        raise XDR.Error,
+          message: ":length and :type options required for #{name}",
+          type: name
+      end
       %{type | data_type: data_type, length: length}
     end
 
@@ -16,7 +23,7 @@ defmodule XDR.Type.Array do
 
     def build_value!(%{data_type: data_type, length: length, type_name: name} = type, raw_values)
         when is_list(raw_values) do
-      if length(raw_values) !== length do
+      unless length(raw_values) == length do
         raise XDR.Error,
           message: "Wrong length, expected #{length} values",
           type: name,

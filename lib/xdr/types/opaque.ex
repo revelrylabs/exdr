@@ -1,24 +1,20 @@
-defmodule XDR.Type.VariableOpaque do
+defmodule XDR.Type.Opaque do
   @moduledoc """
-  Variable-length binary data
+  Fixed-length binary data
   """
   alias XDR.Size
 
-  defstruct length: nil, max_len: Size.max(), type_name: "VariableOpaque", value: nil
+  defstruct length: nil, type_name: "Opaque", value: nil
 
   defimpl XDR.Type do
-    def build_type(type, max_len) when is_integer(max_len) do
-      if max_len > Size.max() do
+    def build_type(type, length) when is_integer(length) do
+      if length > Size.max() do
         raise XDR.Error,
-          message: "max length value must not be larger than #{Size.max()}",
+          message: "length value must not be larger than #{Size.max()}",
           type: type.type_name
       end
 
-      %{type | max_len: max_len}
-    end
-
-    def build_type(type, []) do
-      type
+      %{type | length: length}
     end
 
     def resolve_type!(type, _) do
@@ -26,15 +22,13 @@ defmodule XDR.Type.VariableOpaque do
     end
 
     def build_value!(type, value) when is_binary(value) do
-      len = byte_size(value)
-
-      if len > type.max_len do
+      if byte_size(value) != type.length do
         raise XDR.Error,
-          message: "value length is more than the maximum of #{type.max_len} bytes",
+          message: "value must be #{type.length} bytes",
           type: type.type_name,
           data: value
       else
-        %{type | length: len, value: value}
+        %{type | value: value}
       end
     end
 
@@ -49,10 +43,11 @@ defmodule XDR.Type.VariableOpaque do
       Size.encode(length) <> value <> XDR.padding(length)
     end
 
-    def encode!(_) do
+    def encode!(type) do
       raise XDR.Error,
         message: "missing or malformed value or length",
-        type: "VariableOpaque"
+        type: type.type_name,
+        data: type
     end
 
     def decode!(type, encoding_with_length) do
@@ -67,3 +62,4 @@ defmodule XDR.Type.VariableOpaque do
     end
   end
 end
+

@@ -9,6 +9,12 @@ defmodule XDR do
     XDR.Type.build_type(struct(type), options)
   end
 
+  # TODO: maybe these that involve custom_types should live somewhere else?
+  # simple type alias
+  def register_type(custom_types, alias_name, base_type, _options) when is_binary(base_type) do
+    Map.put(custom_types, alias_name, base_type)
+  end
+
   def register_type(custom_types, name, base_type, options) do
     type = build_type(base_type, options)
     Map.put(custom_types, name, type)

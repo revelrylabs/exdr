@@ -11,12 +11,20 @@ defmodule XDR.Base do
 
       alias XDR.Type.{
         Array,
+        Bool,
         Const,
+        Double,
         Enum,
+        Float,
+        HyperInt,
         Int,
+        Opaque,
         Optional,
+        String,
         Struct,
         Union,
+        UnsignedHyperInt,
+        UnsignedInt,
         VariableArray,
         VariableOpaque,
         Void
@@ -87,6 +95,12 @@ defmodule XDR.Base do
                       unquote(options)
                     )
     end
+  end
+
+  @doc ~S"""
+  A NOOP macro that allows for extensive documentation of defined types
+  """
+  defmacro comment(_) do
   end
 
   def build_type(type) do

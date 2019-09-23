@@ -1,27 +1,27 @@
-defmodule XDR.Type.Int do
+defmodule XDR.Type.HyperInt do
   @moduledoc """
-  Signed 32-bit integer
+  Signed 64-bit integer
   """
-  defstruct type_name: "Int", value: nil
+  defstruct type_name: "HyperInt", value: nil
 
   def encode(value) when is_integer(value) do
-    <<value::big-signed-integer-size(32)>>
+    <<value::big-signed-integer-size(64)>>
   end
 
   def encode(%__MODULE__{value: value}) when is_integer(value) do
     encode(value)
   end
 
-  def decode!(<<value::big-signed-integer-size(32), rest::binary>>) do
+  def decode!(<<value::big-signed-integer-size(64), rest::binary>>) do
     {value, rest}
   end
 
   def decode!(_) do
-    raise "Ran out of bytes while trying to read an Int"
+    raise "Ran out of bytes while trying to read a HyperInt"
   end
 
   defimpl XDR.Type do
-    alias XDR.Type.Int
+    alias XDR.Type.HyperInt
 
     def build_type(type, _), do: type
 
@@ -38,11 +38,11 @@ defmodule XDR.Type.Int do
     def extract_value!(%{value: value}), do: value
 
     def encode!(type_with_value) do
-      Int.encode(type_with_value)
+      HyperInt.encode(type_with_value)
     end
 
     def decode!(type, encoding) do
-      {value, rest} = Int.decode!(encoding)
+      {value, rest} = HyperInt.decode!(encoding)
       type_with_value = build_value!(type, value)
       {type_with_value, rest}
     end

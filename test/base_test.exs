@@ -1,8 +1,13 @@
 defmodule CustomXDR do
+  @moduledoc """
+  Module implementing a set of custom type defs by using XDR.Base
+  """
   use XDR.Base
 
   define_type("Number", Int)
+  define_type("BigFloat", Double)
   define_type("Name", VariableOpaque, 100)
+  define_type("StringName", String, 100)
   define_type("TheMagicNumber", Const, 42)
 
   define_type(
@@ -19,13 +24,14 @@ defmodule CustomXDR do
     Struct,
     age: "Number",
     name: "Name",
+    height: build_type(Float),
     address:
       build_type(
         Struct,
         nick_name: "Name",
         street: build_type(VariableOpaque),
         city: build_type(VariableOpaque),
-        state: build_type(VariableOpaque),
+        state: build_type(Opaque, 2),
         postal_code: build_type(VariableOpaque)
       )
   )
@@ -40,14 +46,14 @@ defmodule CustomXDR do
     "FiveNames",
     Array,
     type: "Name",
-    size: 5
+    length: 5
   )
 
   define_type(
     "SomeNames",
     VariableArray,
     type: "Name",
-    max_size: 100
+    max_length: 100
   )
 
   define_type(
@@ -95,7 +101,10 @@ defmodule CustomXDR do
   )
 end
 
-defmodule XDRUsingTest do
+defmodule XDR.BaseTest do
+  @moduledoc """
+  Tests for XDR.Base
+  """
   use ExUnit.Case
 
   @address_value [
@@ -160,6 +169,7 @@ defmodule XDRUsingTest do
         "Person",
         name: "Jason",
         age: 42,
+        height: 1.0,
         address: @address_value
       )
 
@@ -176,6 +186,7 @@ defmodule XDRUsingTest do
     assert [
              age: 42,
              name: "Jason",
+             height: 1.0,
              address: @address_value
            ] = CustomXDR.extract_value!(person)
   end
@@ -285,12 +296,36 @@ defmodule XDRUsingTest do
     assert CustomXDR.extract_value!(names) == name_list
   end
 
+  test "works with strings" do
+    name_raw = "Marvin"
+    name = CustomXDR.build_value!("StringName", name_raw)
+    encoded = CustomXDR.encode!(name)
+    assert <<0, 0, 0, 6>> <> "Marvin" <> <<0, 0>> = encoded
+    assert name == CustomXDR.decode!("StringName", encoded)
+    assert CustomXDR.extract_value!(name) == name_raw
+  end
+
+  test "requires strings to be constituted of ascii characters" do
+    name_raw = <<135>> <> "arvin"
+    assert {:error, error} = CustomXDR.build_value("StringName", name_raw)
+    assert error.message =~ "can only contain ASCII"
+  end
+
+  test "can build a custom double and encode it with precision" do
+    num = 0.000003333333333333333123
+    assert {:ok, type} = CustomXDR.build_value("BigFloat", num)
+    assert {:ok, encoded} = CustomXDR.encode(type)
+    assert {:ok, decoded} = CustomXDR.decode("BigFloat", encoded)
+    assert num - CustomXDR.extract_value!(decoded) < 1.0e-18
+  end
+
   test "reports errors properly with ad hoc types" do
     {:error, error} =
       CustomXDR.build_value(
         "Person",
         name: "Jason",
         age: 42,
+        height: 1.1e2,
         address: Keyword.put(@address_value, :city, 123)
       )
 
@@ -305,6 +340,7 @@ defmodule XDRUsingTest do
         "Person",
         name: "Jason",
         age: 42,
+        height: -1.0,
         address: Keyword.put(@address_value, :nick_name, 123)
       )
 

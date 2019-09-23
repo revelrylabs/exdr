@@ -6,6 +6,8 @@ defmodule XDR.Type.Enum do
   defstruct options: [], value: nil, type_name: "Enum"
 
   defimpl XDR.Type do
+    alias XDR.Type.Int
+
     def build_type(type, options) when is_list(options) do
       # TODO: validate that all values are ints?
       %{type | options: options}
@@ -26,11 +28,11 @@ defmodule XDR.Type.Enum do
     def encode!(%{options: options, value: value}) do
       options
       |> Keyword.get(value)
-      |> XDR.Type.Int.encode()
+      |> Int.encode()
     end
 
     def decode!(type, encoding) do
-      {int_val, rest} = XDR.Type.Int.decode!(encoding)
+      {int_val, rest} = Int.decode!(encoding)
 
       value =
         type.options

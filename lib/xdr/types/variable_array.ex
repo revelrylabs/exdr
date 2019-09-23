@@ -2,18 +2,17 @@ defmodule XDR.Type.VariableArray do
   @moduledoc """
   A variable-length array of some other type
   """
+  alias XDR.Size
 
-  @max trunc(:math.pow(2, 32) - 1)
-
-  defstruct type_name: "VariableArray", data_type: nil, max_length: @max, values: []
+  defstruct type_name: "VariableArray", data_type: nil, max_length: Size.max(), values: []
 
   defimpl XDR.Type do
-    def build_type(type, type: data_type, max_size: max_length) when is_integer(max_length) do
+    def build_type(type, type: data_type, max_length: max_length) when is_integer(max_length) do
       %{type | data_type: data_type, max_length: max_length}
     end
 
     def build_type(type, options) do
-      build_type(type, Keyword.merge(options, max_size: @max))
+      build_type(type, Keyword.merge(options, max_length: Size.max()))
     end
 
     def resolve_type!(%{data_type: data_type} = type, %{} = custom_types) do
@@ -41,7 +40,7 @@ defmodule XDR.Type.VariableArray do
     end
 
     def encode!(%{values: values}) do
-      encoded_length = XDR.Type.Int.encode(length(values))
+      encoded_length = Size.encode(length(values))
 
       encoded_values =
         values
@@ -52,7 +51,7 @@ defmodule XDR.Type.VariableArray do
     end
 
     def decode!(%{data_type: data_type} = type, full_encoding) do
-      {length, encoding} = XDR.Type.Int.decode!(full_encoding)
+      {length, encoding} = Size.decode!(full_encoding)
 
       {reversed_values, rest} =
         1..length

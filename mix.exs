@@ -9,6 +9,7 @@ defmodule XDR.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
+      elixirc_paths: elixirc_paths(Mix.env),
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
@@ -32,4 +33,7 @@ defmodule XDR.MixProject do
       {:excoveralls, "~> 0.7", only: :test}
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib","test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end

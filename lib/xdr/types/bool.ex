@@ -31,7 +31,7 @@ defmodule XDR.Type.Bool do
     def encode!(%{value: false}), do: Int.encode(0)
 
     def decode!(type, encoding) do
-      {value, rest} = XDR.Type.Int.decode!(encoding)
+      {value, rest} = Int.decode!(encoding)
       type_with_value = build_value!(type, value == 1)
       {type_with_value, rest}
     end

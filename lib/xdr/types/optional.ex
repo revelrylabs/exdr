@@ -20,6 +20,18 @@ defmodule XDR.Type.Optional do
       %{type | switch: XDR.build_value!(switch, false), value: %XDR.Type.Void{}}
     end
 
+    def build_value!(type, nil) do
+      build_value!(type, {false, nil})
+    end
+
+    def build_value!(type, false) do
+      build_value!(type, {false, nil})
+    end
+
+    def build_value!(type, val) do
+      build_value!(type, {true, val})
+    end
+
     def extract_value!(%{value: value}), do: XDR.Type.extract_value!(value)
 
     def encode!(%{switch: switch, value: value}) do

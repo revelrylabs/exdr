@@ -3,7 +3,8 @@ defimpl XDR.Type, for: BitString do
   def resolve_type!(name, %{} = custom_types) do
     case Map.get(custom_types, name) do
       nil -> raise "type '#{name}' has not been defined"
-      type -> XDR.Type.resolve_type!(%{type | type_name: name}, custom_types)
+      <<_::binary>> = type -> XDR.Type.resolve_type!(type, custom_types)
+      %{} = type -> XDR.Type.resolve_type!(%{type | type_name: name}, custom_types)
     end
   end
 
