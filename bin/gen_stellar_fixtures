@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Installing node dependencies for building Stellar test fixtures"
+npm install --prefix test/support/stellar
+
+echo "Generating new test fixtures for Stellar tests"
+npm run build --prefix test/support/stellar

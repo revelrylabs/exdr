@@ -40,7 +40,7 @@ defmodule XDR.Type.Opaque do
 
     def encode!(%{length: length, value: value})
         when is_integer(length) and is_binary(value) do
-      Size.encode(length) <> value <> XDR.padding(length)
+      value <> XDR.padding(length)
     end
 
     def encode!(type) do
@@ -50,8 +50,7 @@ defmodule XDR.Type.Opaque do
         data: type
     end
 
-    def decode!(type, encoding_with_length) do
-      {length, encoding} = Size.decode!(encoding_with_length)
+    def decode!(%{length: length} = type, encoding) do
       padding_length = XDR.padding_length(length)
 
       <<value::binary-size(length), _padding::binary-size(padding_length), rest::binary>> =
