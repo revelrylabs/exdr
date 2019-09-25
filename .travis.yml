@@ -6,14 +6,14 @@ jobs:
       name: 'Unit Tests'
       language: elixir
       elixir:
-        - 1.6.6
+        - 1.7.2
         - 1.9.1
       otp_release:
         - 19.3
         - 22.1
       matrix:
         exclude:
-          - elixir: 1.6.6
+          - elixir: 1.7.2
             otp_release: 22.1
           - elixir: 1.9.1
             otp_release: 19.3
