@@ -4,6 +4,11 @@ defmodule XDR.Type.UnsignedHyperInt do
   """
   defstruct type_name: "UnsignedHyperInt", value: nil
 
+  @type value() :: 0..0xffffffff_ffffffff
+  @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
+  @type encoding() :: <<_::64>>
+
+  @spec encode(value() | t()) :: encoding()
   def encode(value) when is_integer(value) do
     <<value::big-unsigned-integer-size(64)>>
   end
@@ -12,6 +17,7 @@ defmodule XDR.Type.UnsignedHyperInt do
     encode(value)
   end
 
+  @spec decode!(<<_::64, _::_*8>>) :: {value(), binary()}
   def decode!(<<value::big-unsigned-integer-size(64), rest::binary>>) do
     {value, rest}
   end

@@ -4,6 +4,14 @@ defmodule XDR.Type.UnsignedInt do
   """
   defstruct type_name: "UnsignedInt", value: nil
 
+  @type value() :: 0..0xffffffff
+  @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
+  @type encoding() :: <<_::32>>
+
+  @doc """
+  Encode the integer as a 32-byte binary
+  """
+  @spec encode(integer() | t()) :: encoding()
   def encode(value) when is_integer(value) do
     <<value::big-unsigned-integer-size(32)>>
   end
@@ -12,6 +20,7 @@ defmodule XDR.Type.UnsignedInt do
     encode(value)
   end
 
+  @spec decode!(<<_::32, _::_*8>>) :: {value(), binary()}
   def decode!(<<value::big-unsigned-integer-size(32), rest::binary>>) do
     {value, rest}
   end

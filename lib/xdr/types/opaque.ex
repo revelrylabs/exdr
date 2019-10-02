@@ -6,6 +6,13 @@ defmodule XDR.Type.Opaque do
 
   defstruct length: nil, type_name: "Opaque", value: nil
 
+  @type t() :: %__MODULE__{
+    length: XDR.Size.t(),
+    value: binary(),
+    type_name: String.t()
+  }
+  @type encoding() :: <<_::_*32>>
+
   defimpl XDR.Type do
     def build_type(type, length) when is_integer(length) do
       if length > Size.max() do
@@ -15,6 +22,12 @@ defmodule XDR.Type.Opaque do
       end
 
       %{type | length: length}
+    end
+
+    def build_type(type, _) do
+      raise XDR.Error,
+        message: "A valid size must be provided",
+        type: type.type_name
     end
 
     def resolve_type!(type, _) do
@@ -40,7 +53,7 @@ defmodule XDR.Type.Opaque do
 
     def encode!(%{length: length, value: value})
         when is_integer(length) and is_binary(value) do
-      value <> XDR.padding(length)
+      value <> XDR.Padding.padding(length)
     end
 
     def encode!(type) do
@@ -51,7 +64,7 @@ defmodule XDR.Type.Opaque do
     end
 
     def decode!(%{length: length} = type, encoding) do
-      padding_length = XDR.padding_length(length)
+      padding_length = XDR.Padding.padding_length(length)
 
       <<value::binary-size(length), _padding::binary-size(padding_length), rest::binary>> =
         encoding

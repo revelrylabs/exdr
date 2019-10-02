@@ -6,6 +6,14 @@ defmodule XDR.Type.VariableArray do
 
   defstruct type_name: "VariableArray", data_type: nil, max_length: Size.max(), values: []
 
+  @type t() :: %__MODULE__{
+    type_name: String.t(),
+    data_type: XDR.Type.t(),
+    max_length: XDR.Size.t(),
+    values: list(XDR.Type.t())
+  }
+  @type options() :: [type: XDR.Type.key(), max_length: XDR.Size.t()]
+
   defimpl XDR.Type do
     def build_type(type, type: data_type, max_length: max_length) when is_integer(max_length) do
       %{type | data_type: data_type, max_length: max_length}

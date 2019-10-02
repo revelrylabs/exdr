@@ -3,6 +3,10 @@ defmodule XDR.Type.Enum do
   Enum
   """
 
+  @type options() :: keyword(XDR.Type.Int.value())
+  @type value() :: XDR.Type.Int.value()
+  @type t() :: %__MODULE__{options: options(), value: value(), type_name: String.t()}
+
   defstruct options: [], value: nil, type_name: "Enum"
 
   defimpl XDR.Type do

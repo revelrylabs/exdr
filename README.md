@@ -22,11 +22,11 @@ be found at [https://hexdocs.pm/xdr](https://hexdocs.pm/xdr).
 
 
 CURRENT STATUS:
-* TODO: union default branch
-* TODO: For a union whose arm is Void, allow omitting the tuple and just providing the switch. See `asset` and `ext` in the stellar test
-* TODO (make an Issue): Quadruple-precision floating point type
-* Organize & doc
+* Get test coverage up to 100%
+* Typedefs & docs
 * Automate deployment to hex
+* TODO (make an Issue): Quadruple-precision floating point type
+* TODO (make an Issue): implement union default branch
 
 Spec: https://tools.ietf.org/html/rfc4506
 JS xdr source: https://github.com/stellar/js-xdr/tree/master/src

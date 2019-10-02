@@ -4,6 +4,11 @@ defmodule XDR.Type.Float do
   """
   defstruct type_name: "Float", value: nil
 
+  @type value() :: float()
+  @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
+  @type encoding() :: <<_::32>>
+
+  @spec encode(value() | t()) :: encoding()
   def encode(value) when is_float(value) do
     <<value::float-size(32)>>
   end
@@ -12,6 +17,7 @@ defmodule XDR.Type.Float do
     encode(value)
   end
 
+  @spec decode!(<<_::32, _::_*8>>) :: {value(), binary()}
   def decode!(<<value::float-size(32), rest::binary>>) do
     {value, rest}
   end

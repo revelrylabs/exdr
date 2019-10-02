@@ -1,11 +1,36 @@
 defmodule XDR.Type.Union do
-  # TODO: default_arm
+  @moduledoc """
+  A Union is a polymorphic type.
+  It has a _switch_ of type enum or int, whose value determines the type of the union's data.
+
+  ### TODO
+  - finish support for a default arm
+  """
+
   defstruct arms: [],
             switches: [],
             switch_name: nil,
             switch: nil,
             type_name: "Union",
+            default_arm: nil,
             value: nil
+
+  @type switch() :: {atom() | integer(), atom() | XDR.Void | XDR.Void.t()}
+  @type options() :: [
+    arms: keyword(XDR.Type.t()),
+    switch_name: String.t() | atom(),
+    switch_type: XDR.Type.t(),
+    switches: list(switch()),
+    default_arm: atom()
+  ]
+  @type t() :: %__MODULE__{
+    arms: list(XDR.Type.t()),
+    switches: list(switch()),
+    switch_name: String.t() | atom() | nil,
+    type_name: String.t(),
+    default_arm: atom() | nil,
+    value: XDR.Type.t()
+  }
 
   def validate_type_options!(options) do
     options
@@ -27,8 +52,6 @@ defmodule XDR.Type.Union do
     end
   end
 
-  # TODO: These validations can be shared with a little refactoring
-  # but maybe they're not needed in the other types?
   defp require!(list, key) do
     if !Keyword.has_key?(list, key) do
       raise %XDR.Error{message: "key #{key} is required", data: list, type: "Union"}
@@ -72,7 +95,8 @@ defmodule XDR.Type.Union do
         arms: options[:arms],
         switches: options[:switches],
         switch_name: options[:switch_name] || nil,
-        switch: options[:switch_type]
+        switch: options[:switch_type],
+        default_arm: options[:default_arm] || nil
       })
     end
 
@@ -95,6 +119,9 @@ defmodule XDR.Type.Union do
 
       %{type | switch: switch_value, value: value}
     end
+
+    # Just supply the switch value to use the Void arm
+    def build_value!(type, switch_raw), do: build_value!(type, {switch_raw, nil})
 
     def extract_value!(%{value: value}) do
       XDR.Type.extract_value!(value)

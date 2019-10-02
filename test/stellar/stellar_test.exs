@@ -26,13 +26,13 @@ defmodule StellarXDRTest do
       fee: 100,
       seq_num: 2_319_149_195_853_854 + 1,
       time_bounds: nil,
-      memo: {:memo_none, nil},
+      memo: :memo_none,
       operations: [
         [
           source_account: nil,
           body: {:payment, [
             destination: dest_acct,
-            asset: {:asset_type_native, nil},
+            asset: :asset_type_native,
             amount: 1000
           ]}
         ]

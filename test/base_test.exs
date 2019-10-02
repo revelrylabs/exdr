@@ -117,11 +117,11 @@ defmodule XDR.BaseTest do
 
   test "registers types properly" do
     assert %{"Number" => %XDR.Type.Int{}} = CustomXDR.custom_types()
-    assert %{"Name" => %XDR.Type.VariableOpaque{max_len: 100}} = CustomXDR.custom_types()
+    assert %{"Name" => %XDR.Type.VariableOpaque{max_length: 100}} = CustomXDR.custom_types()
     assert CustomXDR.resolve_type!("Number") == %XDR.Type.Int{type_name: "Number"}
 
     assert CustomXDR.resolve_type!("Name") == %XDR.Type.VariableOpaque{
-             max_len: 100,
+             max_length: 100,
              type_name: "Name"
            }
   end
@@ -129,7 +129,7 @@ defmodule XDR.BaseTest do
   test "resolves a test score" do
     assert CustomXDR.resolve_type!("TestScore") == %XDR.Type.Struct{
              fields: [
-               name: %XDR.Type.VariableOpaque{max_len: 100, type_name: "Name"},
+               name: %XDR.Type.VariableOpaque{max_length: 100, type_name: "Name"},
                score: %XDR.Type.Int{type_name: "Number"},
                grade: %XDR.Type.VariableOpaque{type_name: "VariableOpaque"},
                nothing: %XDR.Type.Void{type_name: "Void"}

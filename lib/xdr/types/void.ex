@@ -5,6 +5,9 @@ defmodule XDR.Type.Void do
 
   defstruct type_name: "Void"
 
+  @type t() :: %__MODULE__{type_name: String.t()}
+  @type encoding() :: <<>>
+
   defimpl XDR.Type do
     def build_type(type, _), do: type
 

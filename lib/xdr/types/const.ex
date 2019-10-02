@@ -5,6 +5,8 @@ defmodule XDR.Type.Const do
 
   defstruct type_name: "Const", value: nil
 
+  @type t() :: %__MODULE__{type_name: String.t(), value: any()}
+
   defimpl XDR.Type do
     def build_type(type, value), do: %{type | value: value}
 

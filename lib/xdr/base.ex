@@ -1,7 +1,6 @@
 defmodule XDR.Base do
   @moduledoc """
-  Use this module to define named custom XDR types for use in your application
-  ...
+  `use` this module to define named custom XDR types for use in your application
   """
 
   @doc false
@@ -88,7 +87,7 @@ defmodule XDR.Base do
 
   defmacro define_type(name, base_type, options \\ []) do
     quote do
-      @custom_types XDR.register_type(
+      @custom_types XDR.Type.CustomType.register_type(
                       @custom_types,
                       unquote(name),
                       unquote(base_type),

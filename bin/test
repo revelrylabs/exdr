@@ -3,4 +3,4 @@
 # run tests
 # make sure to run bin/setup first
 
-mix test
+mix coveralls.json

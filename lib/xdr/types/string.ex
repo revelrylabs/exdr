@@ -6,7 +6,15 @@ defmodule XDR.Type.String do
   """
   alias XDR.Size
 
-  defstruct length: nil, max_len: Size.max(), type_name: "String", value: nil
+  defstruct length: nil, max_length: Size.max(), type_name: "String", value: nil
+
+  @type t() :: %__MODULE__{
+    length: XDR.Size.t(),
+    max_length: XDR.Size.t(),
+    type_name: String.t(),
+    value: binary()
+  }
+  @type encoding() :: <<_::_*32>>
 
   defimpl XDR.Type do
     alias XDR.Type.XDR.Type.VariableOpaque
@@ -17,7 +25,6 @@ defmodule XDR.Type.String do
     defdelegate encode!(type_with_value), to: VariableOpaque
 
     def build_value!(type, value) when is_binary(value) do
-      #TODO: check the byes here!
       if !is_ascii(value) do
         raise XDR.Error,
           message: "Strings can only contain ASCII characters",

@@ -1,5 +1,11 @@
 defmodule XDR.Type.Struct do
+  @moduledoc """
+  Struct with each atom key pointing to an XDR type of its own
+  """
   defstruct fields: [], type_name: "Struct"
+
+  @type fields() :: keyword(XDR.Type.t())
+  @type t() :: %__MODULE__{type_name: String.t(), fields: fields()}
 
   defimpl XDR.Type do
     def build_type(type, fields) when is_list(fields) do
