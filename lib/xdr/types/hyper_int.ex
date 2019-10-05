@@ -8,6 +8,9 @@ defmodule XDR.Type.HyperInt do
   @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
   @type encoding() :: <<_::64>>
 
+  @doc """
+  Encode the given integer or `XDR.Type.HyperInt` struct as an 8-byte binary
+  """
   @spec encode(value() | t()) :: encoding()
   def encode(value) when is_integer(value) do
     <<value::big-signed-integer-size(64)>>
@@ -17,6 +20,10 @@ defmodule XDR.Type.HyperInt do
     encode(value)
   end
 
+  @doc """
+  Decode the first 8 bytes of the binary as a hyperint and return that value
+  along with the rest of the binary in a tuple
+  """
   @spec decode!(<<_::64, _::_*8>>) :: {value(), binary()}
   def decode!(<<value::big-signed-integer-size(64), rest::binary>>) do
     {value, rest}

@@ -6,6 +6,7 @@ defmodule XDR.Type.Optional do
   defstruct type_name: "Optional", switch: %XDR.Type.Bool{}, data_type: nil, value: nil
 
   @type t() :: %__MODULE__{type_name: String.t(), switch: XDR.Type.Bool.t(), data_type: XDR.Type.t(), value: XDR.Type.t()}
+  @type value() :: {boolean(), any()} | false | nil | any()
 
   defimpl XDR.Type do
     def build_type(type, data_type), do: %{type | data_type: data_type}

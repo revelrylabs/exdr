@@ -15,7 +15,8 @@ defmodule XDR.Type.Union do
             default_arm: nil,
             value: nil
 
-  @type switch() :: {atom() | integer(), atom() | XDR.Void | XDR.Void.t()}
+  @type switch_value() :: atom() | integer()
+  @type switch() :: {switch_value(), atom() | XDR.Void | XDR.Void.t()}
   @type options() :: [
     arms: keyword(XDR.Type.t()),
     switch_name: String.t() | atom(),
@@ -31,6 +32,7 @@ defmodule XDR.Type.Union do
     default_arm: atom() | nil,
     value: XDR.Type.t()
   }
+  @type value() :: {switch_value(), any()} | switch_value()
 
   def validate_type_options!(options) do
     options

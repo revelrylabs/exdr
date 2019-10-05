@@ -8,6 +8,9 @@ defmodule XDR.Type.Float do
   @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
   @type encoding() :: <<_::32>>
 
+  @doc """
+  Encode the given float or `%XDR.Type.Float{}` as an 4-byte binary
+  """
   @spec encode(value() | t()) :: encoding()
   def encode(value) when is_float(value) do
     <<value::float-size(32)>>
@@ -17,6 +20,10 @@ defmodule XDR.Type.Float do
     encode(value)
   end
 
+  @doc """
+  Decode the first 4 bytes of the given binary as a single-precision float
+  and return the value along with the reamining binary as a tuple
+  """
   @spec decode!(<<_::32, _::_*8>>) :: {value(), binary()}
   def decode!(<<value::float-size(32), rest::binary>>) do
     {value, rest}

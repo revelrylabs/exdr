@@ -9,7 +9,7 @@ defmodule XDR.Type.UnsignedInt do
   @type encoding() :: <<_::32>>
 
   @doc """
-  Encode the integer as a 32-byte binary
+  Encode the integer or `XDR.Type.UnsignedInt` struct as a 4-byte binary
   """
   @spec encode(integer() | t()) :: encoding()
   def encode(value) when is_integer(value) do
@@ -20,6 +20,10 @@ defmodule XDR.Type.UnsignedInt do
     encode(value)
   end
 
+  @doc """
+  Decode the first 4 bytes of the binary into an unsigned int and return
+  the value along with the remaining binary in a tuple
+  """
   @spec decode!(<<_::32, _::_*8>>) :: {value(), binary()}
   def decode!(<<value::big-unsigned-integer-size(32), rest::binary>>) do
     {value, rest}

@@ -8,6 +8,9 @@ defmodule XDR.Type.Double do
   @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
   @type encoding() :: <<_::64>>
 
+  @doc """
+  Encode the given float or `%XDR.Type.Float{}` as an 8-byte binary
+  """
   @spec encode(value() | t()) :: encoding()
   def encode(value) when is_float(value) do
     <<value::float-size(64)>>
@@ -17,6 +20,10 @@ defmodule XDR.Type.Double do
     encode(value)
   end
 
+  @doc """
+  Decode the first 8 bytes of the given binary as a single-precision float
+  and return the value along with the reamining binary as a tuple
+  """
   @spec decode!(<<_::64, _::_*8>>) :: {value(), binary()}
   def decode!(<<value::float-size(64), rest::binary>>) do
     {value, rest}

@@ -1,6 +1,12 @@
 defmodule XDR.Base do
   @moduledoc """
-  `use` this module to define named custom XDR types for use in your application
+  Provides the ability to predefine and precompile specific XDR types for your application.
+
+  Create a module in your app, and `use XDR.Base`.
+
+  Your module will now have access to the `define_type` macro, as well as all of the
+  functions on the main `XDR` module. See [the README](readme.html#custom-xdr-type-definitions) for an example.
+
   """
 
   @doc false
@@ -85,6 +91,14 @@ defmodule XDR.Base do
     end
   end
 
+  @doc """
+  Define a named XDR type for your application by providing a name and type info.
+  Once defined in your module, you can use type type name instead of a fully built XDR type
+  in your module's functions such as `build_value/2` and `decode/1`.
+
+  The second and third arguments are the same as the first and second
+  arguments of `XDR.build_type/2`.
+  """
   defmacro define_type(name, base_type, options \\ []) do
     quote do
       @custom_types XDR.Type.CustomType.register_type(
@@ -98,15 +112,15 @@ defmodule XDR.Base do
 
   @doc ~S"""
   A NOOP macro that allows for extensive documentation of defined types
+  See [the generated Stellar module](https://github.com/revelrylabs/elixir-xdr/tree/master/test/support/stellar/Stellar.XDR_generated.ex)
   """
   defmacro comment(_) do
   end
 
-  def build_type(type) do
-    build_type(type, [])
-  end
-
-  def build_type(type, options) do
+  @doc """
+  Convenience function to build an XDR type. See `XDR.build_type/2`
+  """
+  def build_type(type, options \\ []) do
     XDR.build_type(type, options)
   end
 end

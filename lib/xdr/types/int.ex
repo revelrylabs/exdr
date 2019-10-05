@@ -8,6 +8,9 @@ defmodule XDR.Type.Int do
   @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
   @type encoding() :: <<_::32>>
 
+  @doc """
+  Encode an integer or `%XDR.Type.Int{}` struct
+  """
   @spec encode(value() | t()) :: encoding()
   def encode(value) when is_integer(value) do
     <<value::big-signed-integer-size(32)>>
@@ -17,6 +20,10 @@ defmodule XDR.Type.Int do
     encode(value)
   end
 
+  @doc """
+  Pull a raw integer out of the given binary, returning the value
+  and remaining binary in a tuple
+  """
   @spec decode!(<<_::32, _::_*8>>) :: {value(), binary()}
   def decode!(<<value::big-signed-integer-size(32), rest::binary>>) do
     {value, rest}

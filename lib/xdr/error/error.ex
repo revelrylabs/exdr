@@ -1,6 +1,13 @@
 defmodule XDR.Error do
+  @moduledoc """
+  Errors explicitly created by XDR will usually be an `XDR.Error`.
+  Also, errors triggered inside a complex data type will be wrapped
+  and annotated with path info before being re-raised or returned to the user.
+  """
   defexception [:data, :message, :path, :type]
   def wrap(message) when is_binary(message), do: %XDR.Error{message: message}
+
+  def wrap(message) when is_atom(message), do: %XDR.Error{message: message}
 
   def wrap(%XDR.Error{} = error), do: error
 

@@ -7,6 +7,9 @@ defmodule XDR.Padding do
   @type padding_len() :: 0..3
   @type padding() :: <<>> | <<_::8>> | <<_::16>> | <<_::24>>
 
+  @doc """
+  The number of bytes of padding required, given the length of the content
+  """
   @spec padding_length(non_neg_integer()) :: padding_len()
   def padding_length(data_length) do
     case rem(data_length, 4) do
@@ -15,6 +18,9 @@ defmodule XDR.Padding do
     end
   end
 
+  @doc """
+  The actual padding bytes required given the lenght of the content
+  """
   @spec padding(non_neg_integer()) :: padding()
   def padding(data_length) do
     String.duplicate(<<0>>, padding_length(data_length))

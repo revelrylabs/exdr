@@ -8,6 +8,9 @@ defmodule XDR.Type.UnsignedHyperInt do
   @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
   @type encoding() :: <<_::64>>
 
+  @doc """
+  Encode the given unsigned integer or struct as an 8-byte binary
+  """
   @spec encode(value() | t()) :: encoding()
   def encode(value) when is_integer(value) do
     <<value::big-unsigned-integer-size(64)>>
@@ -17,6 +20,10 @@ defmodule XDR.Type.UnsignedHyperInt do
     encode(value)
   end
 
+  @doc """
+  Decode the first 8 bytes of the binary as an unsigned int and return
+  the value along with the remaining binary in a tuple
+  """
   @spec decode!(<<_::64, _::_*8>>) :: {value(), binary()}
   def decode!(<<value::big-unsigned-integer-size(64), rest::binary>>) do
     {value, rest}
