@@ -1,0 +1,35 @@
+git:
+  depth: false
+language: elixir
+elixir:
+  - 1.7.2
+  - 1.9.1
+otp_release:
+  - 19.3
+  - 22.0
+matrix:
+  exclude:
+    - elixir: 1.7.2
+      otp_release: 22.0
+    - elixir: 1.9.1
+      otp_release: 19.3
+cache:
+  directories:
+    - _build
+    - deps
+install:
+  - bin/setup
+script:
+  - MIX_ENV=test bin/test
+jobs:
+  include:
+    - stage: deploy
+      if: branch = master
+      script: skip
+      elixir: 1.9.1
+      otp_release: 22.0
+      deploy:
+        provider: script
+        script: bin/deploy
+        on:
+          all_branches: true

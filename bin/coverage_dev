@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# run tests and generate an HTML coverage report
+# make sure to run bin/setup first
+
+mix coveralls.html
+echo "to veiw the report, run 'open cover/excoveralls.html'"
+

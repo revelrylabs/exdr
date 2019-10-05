@@ -1,19 +1,32 @@
 defmodule XDR.MixProject do
+  @moduledoc """
+  Elixir XDR project configuration
+  """
   use Mix.Project
 
   def project do
     [
-      app: :xdr,
+      app: :elixir_xdr,
       version: "0.1.0",
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
+      elixirc_paths: elixirc_paths(Mix.env),
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
+      ],
+
+      #docs
+      name: "Elixir XDR",
+      source_url: "https://github.com/revelrylabs/elixir-xdr",
+      homepage_url: "https://github.com/revelrylabs/elixir-xdr",
+      docs: [
+        main: "README",
+        extras: ["README.md"]
       ]
     ]
   end
@@ -29,7 +42,11 @@ defmodule XDR.MixProject do
   defp deps do
     [
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.7", only: :test}
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.11.2", only: :test}
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# TODO: deploy the package to hex
+
+echo "TODO: Make this do something"
