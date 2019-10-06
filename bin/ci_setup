@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# setup for the CI environment
+
+# regular app setup
+./bin/setup
+
+# install coverage tool
+gem install coveralls-multi --no-document

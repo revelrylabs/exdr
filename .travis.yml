@@ -17,10 +17,12 @@ cache:
   directories:
     - _build
     - deps
+env:
+  - MIX_ENV=test
 install:
-  - bin/setup
+  - bin/ci_setup
 script:
-  - MIX_ENV=test bin/ci
+  - bin/ci
 jobs:
   include:
     - stage: deploy
