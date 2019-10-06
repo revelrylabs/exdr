@@ -3,4 +3,4 @@
 # run tests
 # make sure to run bin/setup first
 
-mix coveralls.json
+mix coveralls.travis --pro

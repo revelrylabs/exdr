@@ -20,7 +20,7 @@ cache:
 install:
   - bin/setup
 script:
-  - MIX_ENV=test bin/test
+  - MIX_ENV=test bin/ci
 jobs:
   include:
     - stage: deploy
@@ -28,8 +28,9 @@ jobs:
       script: skip
       elixir: 1.9.1
       otp_release: 22.0
+      skip_cleanup: true
       deploy:
         provider: script
         script: bin/deploy
         on:
-          all_branches: true
+          tags: true

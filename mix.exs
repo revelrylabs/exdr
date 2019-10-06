@@ -4,6 +4,8 @@ defmodule XDR.MixProject do
   """
   use Mix.Project
 
+  @github "https://github.com/revelrylabs/elixir-xdr"
+
   def project do
     [
       app: :elixir_xdr,
@@ -22,8 +24,8 @@ defmodule XDR.MixProject do
 
       #docs
       name: "Elixir XDR",
-      source_url: "https://github.com/revelrylabs/elixir-xdr",
-      homepage_url: "https://github.com/revelrylabs/elixir-xdr",
+      source_url: @github,
+      homepage_url: @github,
       docs: [
         main: "README",
         extras: ["README.md"]
@@ -49,4 +51,15 @@ defmodule XDR.MixProject do
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
+
+  defp package do
+    [
+      description: "Library for working with XDR in Elixir",
+      maintainers: ["Jason Pollentier", "Revelry"],
+      licenses: ["MIT"],
+      links: %{
+        "GitHub" => @github
+      }
+    ]
+  end
 end
