@@ -1,3 +1,8 @@
+|            | Build Status |
+| ---------- | ------------ |
+| `master` | [![Build Status](https://travis-ci.com/revelrylabs/elixir-xdr.svg?token=K2LyiUSDgTC1mWqq2YnM&branch=master)](https://travis-ci.com/revelrylabs/elixir-xdr) |
+| Coverage | ![Coverage Status](https://opencov.prod.revelry.net/projects/40/badge.svg) |
+
 # XDR
 
 XDR is an open data format for serializing and de-serializing structured data based on shared definitions,
@@ -12,7 +17,7 @@ Detailed documentation and examples can be found at [https://hexdocs.pm/elixir-x
 
 ## Installation
 
-Add `elixir-xdr` to your list of dependencies in `mix.exs`:
+Add [`elixir-xdr`](https://hex.pm/packages/elixir-xdr) to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -178,9 +183,6 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/revelr
 
 Everyone is welcome to participate in the project. We expect contributors to
 adhere to the Contributor Covenant Code of Conduct (see [CODE_OF_CONDUCT.md](https://github.com/revelrylabs/elixir-xdr/blob/master/CODE_OF_CONDUCT.md)).
-
-[travis-badge]: https://img.shields.io/travis/revelrylabs/elixir-xdr.svg
-[travis-url]: https://travis-ci.org/revelrylabs/elixir-xdr
 
 ## License
 
