@@ -5,9 +5,6 @@ defmodule Stellar.XDR do
   """
 
   use XDR.Base
-  # noop macro to allow long comments
-  defmacro comment(_) do
-  end
 
   comment ~S"""
   === xdr source ============================================================
@@ -197,7 +194,7 @@ defmodule Stellar.XDR do
       {
           NodeID nodeID;    // v
           uint64 slotIndex; // i
-      
+
           union switch (SCPStatementType type)
           {
           case SCP_ST_PREPARE:
@@ -385,21 +382,21 @@ defmodule Stellar.XDR do
       {
       case ASSET_TYPE_NATIVE: // Not credit
           void;
-      
+
       case ASSET_TYPE_CREDIT_ALPHANUM4:
           struct
           {
               opaque assetCode[4]; // 1 to 4 characters
               AccountID issuer;
           } alphaNum4;
-      
+
       case ASSET_TYPE_CREDIT_ALPHANUM12:
           struct
           {
               opaque assetCode[12]; // 5 to 12 characters
               AccountID issuer;
           } alphaNum12;
-      
+
           // add other asset types here in the future
       };
 
@@ -512,7 +509,7 @@ defmodule Stellar.XDR do
 
       enum AccountFlags
       { // masks for each flag
-      
+
           // Flags set on issuer accounts
           // TrustLines are created with authorized set to "false" requiring
           // the issuer to set it for each TrustLine
@@ -568,7 +565,7 @@ defmodule Stellar.XDR do
       struct
               {
                   Liabilities liabilities;
-      
+
                   union switch (int v)
                   {
                   case 0:
@@ -595,7 +592,7 @@ defmodule Stellar.XDR do
               struct
               {
                   Liabilities liabilities;
-      
+
                   union switch (int v)
                   {
                   case 0:
@@ -631,15 +628,15 @@ defmodule Stellar.XDR do
                                     // drives the reserve
           AccountID* inflationDest; // Account to vote for during inflation
           uint32 flags;             // see AccountFlags
-      
+
           string32 homeDomain; // can be used for reverse federation and memo lookup
-      
+
           // fields used for signatures
           // thresholds stores unsigned bytes: [weight of master|low|medium|high]
           Thresholds thresholds;
-      
+
           Signer signers<20>; // possible signers for this account
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -649,7 +646,7 @@ defmodule Stellar.XDR do
               struct
               {
                   Liabilities liabilities;
-      
+
                   union switch (int v)
                   {
                   case 0:
@@ -727,7 +724,7 @@ defmodule Stellar.XDR do
       struct
               {
                   Liabilities liabilities;
-      
+
                   union switch (int v)
                   {
                   case 0:
@@ -754,7 +751,7 @@ defmodule Stellar.XDR do
               struct
               {
                   Liabilities liabilities;
-      
+
                   union switch (int v)
                   {
                   case 0:
@@ -787,10 +784,10 @@ defmodule Stellar.XDR do
           Asset asset;         // type of asset (with issuer)
           int64 balance;       // how much of this asset the user has.
                                // Asset defines the unit for this;
-      
+
           int64 limit;  // balance cannot be above this
           uint32 flags; // see TrustLineFlags
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -800,7 +797,7 @@ defmodule Stellar.XDR do
               struct
               {
                   Liabilities liabilities;
-      
+
                   union switch (int v)
                   {
                   case 0:
@@ -878,7 +875,7 @@ defmodule Stellar.XDR do
           Asset selling; // A
           Asset buying;  // B
           int64 amount;  // amount of A
-      
+
           /* price for this offer:
               price of A in terms of B
               price=AmountB/AmountA=priceNumerator/priceDenominator
@@ -886,7 +883,7 @@ defmodule Stellar.XDR do
           */
           Price price;
           uint32 flags; // see OfferEntryFlags
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -938,7 +935,7 @@ defmodule Stellar.XDR do
           AccountID accountID; // account this data belongs to
           string64 dataName;
           DataValue dataValue;
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -1018,7 +1015,7 @@ defmodule Stellar.XDR do
       struct LedgerEntry
       {
           uint32 lastModifiedLedgerSeq; // ledger the LedgerEntry was last changed
-      
+
           union switch (LedgerEntryType type)
           {
           case ACCOUNT:
@@ -1031,7 +1028,7 @@ defmodule Stellar.XDR do
               DataEntry data;
           }
           data;
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -1104,14 +1101,14 @@ defmodule Stellar.XDR do
       {
           Hash txSetHash;   // transaction set to apply to previous ledger
           uint64 closeTime; // network close time
-      
+
           // upgrades to apply to the previous ledger (usually empty)
           // this is a vector of encoded 'LedgerUpgrade' so that nodes can drop
           // unknown steps during consensus if needed.
           // see notes below on 'LedgerUpgrade' for more detail
           // max size is dictated by number of upgrade types (+ room for future)
           UpgradeType upgrades<6>;
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -1161,28 +1158,28 @@ defmodule Stellar.XDR do
           StellarValue scpValue;   // what consensus agreed to
           Hash txSetResultHash;    // the TransactionResultSet that led to this ledger
           Hash bucketListHash;     // hash of the ledger state
-      
+
           uint32 ledgerSeq; // sequence number of this ledger
-      
+
           int64 totalCoins; // total number of stroops in existence.
                             // 10,000,000 stroops in 1 XLM
-      
+
           int64 feePool;       // fees burned since last inflation run
           uint32 inflationSeq; // inflation sequence number
-      
+
           uint64 idPool; // last used global ID, used for generating objects
-      
+
           uint32 baseFee;     // base fee per operation in stroops
           uint32 baseReserve; // account base reserve in stroops
-      
+
           uint32 maxTxSetSize; // maximum size a transaction set can be
-      
+
           Hash skipList[4]; // hashes of ledgers in the past. allows you to jump back
                             // in time without walking the chain back ledger by ledger
                             // each slot contains the oldest ledger that is mod of
                             // either 50  5000  50000 or 500000 depending on index
                             // skipList[0] mod(50), skipList[1] mod(5000), etc
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -1338,21 +1335,21 @@ defmodule Stellar.XDR do
           {
               AccountID accountID;
           } account;
-      
+
       case TRUSTLINE:
           struct
           {
               AccountID accountID;
               Asset asset;
           } trustLine;
-      
+
       case OFFER:
           struct
           {
               AccountID sellerID;
               uint64 offerID;
           } offer;
-      
+
       case DATA:
           struct
           {
@@ -1403,7 +1400,7 @@ defmodule Stellar.XDR do
       {
       case LIVEENTRY:
           LedgerEntry liveEntry;
-      
+
       case DEADENTRY:
           LedgerKey deadEntry;
       };
@@ -1497,7 +1494,7 @@ defmodule Stellar.XDR do
       {
           uint32 ledgerSeq;
           TransactionSet txSet;
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -1543,7 +1540,7 @@ defmodule Stellar.XDR do
       {
           uint32 ledgerSeq;
           TransactionResultSet txResultSet;
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -1589,7 +1586,7 @@ defmodule Stellar.XDR do
       {
           Hash hash;
           LedgerHeader header;
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -1957,21 +1954,21 @@ defmodule Stellar.XDR do
           ERROR_MSG = 0,
           AUTH = 2,
           DONT_HAVE = 3,
-      
+
           GET_PEERS = 4, // gets a list of peers this guy knows about
           PEERS = 5,
-      
+
           GET_TX_SET = 6, // gets a particular txset by hash
           TX_SET = 7,
-      
+
           TRANSACTION = 8, // pass on a tx you have heard about
-      
+
           // SCP
           GET_SCP_QUORUMSET = 9,
           SCP_QUORUMSET = 10,
           SCP_MESSAGE = 11,
           GET_SCP_STATE = 12,
-      
+
           // new messages
           HELLO = 13
       };
@@ -2027,15 +2024,15 @@ defmodule Stellar.XDR do
           void;
       case PEERS:
           PeerAddress peers<100>;
-      
+
       case GET_TX_SET:
           uint256 txSetHash;
       case TX_SET:
           TransactionSet txSet;
-      
+
       case TRANSACTION:
           TransactionEnvelope transaction;
-      
+
       // SCP
       case GET_SCP_QUORUMSET:
           uint256 qSetHash;
@@ -2223,11 +2220,11 @@ defmodule Stellar.XDR do
           int64 sendMax;   // the maximum amount of sendAsset to
                            // send (excluding fees).
                            // The operation will fail if can't be met
-      
+
           AccountID destination; // recipient of the payment
           Asset destAsset;       // what they end up with
           int64 destAmount;      // amount they end up with
-      
+
           Asset path<5>; // additional hops it must go through to get there
       };
 
@@ -2251,7 +2248,7 @@ defmodule Stellar.XDR do
           Asset buying;
           int64 amount; // amount being sold. if set to 0, delete the offer
           Price price;  // price of thing being sold in terms of what you are buying
-      
+
           // 0=create a new offer, otherwise edit an existing offer
           uint64 offerID;
       };
@@ -2292,18 +2289,18 @@ defmodule Stellar.XDR do
       struct SetOptionsOp
       {
           AccountID* inflationDest; // sets the inflation destination
-      
+
           uint32* clearFlags; // which flags to clear
           uint32* setFlags;   // which flags to set
-      
+
           // account threshold manipulation
           uint32* masterWeight; // weight of the master account
           uint32* lowThreshold;
           uint32* medThreshold;
           uint32* highThreshold;
-      
+
           string32* homeDomain; // sets the home domain
-      
+
           // Add, update or remove a signer for the account
           // signer is deleted if the weight is 0
           Signer* signer;
@@ -2329,7 +2326,7 @@ defmodule Stellar.XDR do
       struct ChangeTrustOp
       {
           Asset line;
-      
+
           // if limit is set to 0, deletes the trust line
           int64 limit;
       };
@@ -2349,10 +2346,10 @@ defmodule Stellar.XDR do
           // ASSET_TYPE_NATIVE is not allowed
           case ASSET_TYPE_CREDIT_ALPHANUM4:
               opaque assetCode4[4];
-      
+
           case ASSET_TYPE_CREDIT_ALPHANUM12:
               opaque assetCode12[12];
-      
+
               // add other asset types here in the future
           }
 
@@ -2382,14 +2379,14 @@ defmodule Stellar.XDR do
           // ASSET_TYPE_NATIVE is not allowed
           case ASSET_TYPE_CREDIT_ALPHANUM4:
               opaque assetCode4[4];
-      
+
           case ASSET_TYPE_CREDIT_ALPHANUM12:
               opaque assetCode12[12];
-      
+
               // add other asset types here in the future
           }
           asset;
-      
+
           bool authorize;
       };
 
@@ -2505,7 +2502,7 @@ defmodule Stellar.XDR do
           // if not set, the runtime defaults to "sourceAccount" specified at
           // the transaction level
           AccountID* sourceAccount;
-      
+
           union switch (OperationType type)
           {
           case CREATE_ACCOUNT:
@@ -2646,20 +2643,20 @@ defmodule Stellar.XDR do
       {
           // account used to run the transaction
           AccountID sourceAccount;
-      
+
           // the fee the sourceAccount will pay
           uint32 fee;
-      
+
           // sequence number to consume in the account
           SequenceNumber seqNum;
-      
+
           // validity range (inclusive) for the last ledger close time
           TimeBounds* timeBounds;
-      
+
           Memo memo;
-      
+
           Operation operations<100>;
-      
+
           // reserved for future use
           union switch (int v)
           {
@@ -2752,11 +2749,11 @@ defmodule Stellar.XDR do
           // emitted to identify the offer
           AccountID sellerID; // Account that owns the offer
           uint64 offerID;
-      
+
           // amount and asset taken from the owner
           Asset assetSold;
           int64 amountSold;
-      
+
           // amount and asset sent to the owner
           Asset assetBought;
           int64 amountBought;
@@ -2780,7 +2777,7 @@ defmodule Stellar.XDR do
       {
           // codes considered as "success" for the operation
           CREATE_ACCOUNT_SUCCESS = 0, // account was created
-      
+
           // codes considered as "failure" for the operation
           CREATE_ACCOUNT_MALFORMED = -1,   // invalid destination
           CREATE_ACCOUNT_UNDERFUNDED = -2, // not enough funds in source account
@@ -2829,7 +2826,7 @@ defmodule Stellar.XDR do
       {
           // codes considered as "success" for the operation
           PAYMENT_SUCCESS = 0, // payment successfuly completed
-      
+
           // codes considered as "failure" for the operation
           PAYMENT_MALFORMED = -1,          // bad input
           PAYMENT_UNDERFUNDED = -2,        // not enough funds in source account
@@ -2887,7 +2884,7 @@ defmodule Stellar.XDR do
       {
           // codes considered as "success" for the operation
           PATH_PAYMENT_SUCCESS = 0, // success
-      
+
           // codes considered as "failure" for the operation
           PATH_PAYMENT_MALFORMED = -1,          // bad input
           PATH_PAYMENT_UNDERFUNDED = -2,        // not enough funds in source account
@@ -2994,7 +2991,7 @@ defmodule Stellar.XDR do
       {
           // codes considered as "success" for the operation
           MANAGE_OFFER_SUCCESS = 0,
-      
+
           // codes considered as "failure" for the operation
           MANAGE_OFFER_MALFORMED = -1,     // generated offer would be invalid
           MANAGE_OFFER_SELL_NO_TRUST = -2, // no trust line for what we're selling
@@ -3006,10 +3003,10 @@ defmodule Stellar.XDR do
           MANAGE_OFFER_CROSS_SELF = -8,     // would cross an offer from the same user
           MANAGE_OFFER_SELL_NO_ISSUER = -9, // no issuer for what we're selling
           MANAGE_OFFER_BUY_NO_ISSUER = -10, // no issuer for what we're buying
-      
+
           // update errors
           MANAGE_OFFER_NOT_FOUND = -11, // offerID does not match an existing offer
-      
+
           MANAGE_OFFER_LOW_RESERVE = -12 // not enough funds to create a new Offer
       };
 
@@ -3082,7 +3079,7 @@ defmodule Stellar.XDR do
       {
           // offers that got claimed while creating this offer
           ClaimOfferAtom offersClaimed<>;
-      
+
           union switch (ManageOfferEffect effect)
           {
           case MANAGE_OFFER_CREATED:
@@ -3490,7 +3487,7 @@ defmodule Stellar.XDR do
       enum OperationResultCode
       {
           opINNER = 0, // inner object result is valid
-      
+
           opBAD_AUTH = -1,     // too few valid signatures / wrong network
           opNO_ACCOUNT = -2,   // source account was not found
           opNOT_SUPPORTED = -3 // operation not supported at this time
@@ -3628,14 +3625,14 @@ defmodule Stellar.XDR do
       enum TransactionResultCode
       {
           txSUCCESS = 0, // all operations succeeded
-      
+
           txFAILED = -1, // one of the operations failed (none were applied)
-      
+
           txTOO_EARLY = -2,         // ledger closeTime before minTime
           txTOO_LATE = -3,          // ledger closeTime after maxTime
           txMISSING_OPERATION = -4, // no operation was specified
           txBAD_SEQ = -5,           // sequence number does not match source account
-      
+
           txBAD_AUTH = -6,             // too few valid signatures / wrong network
           txINSUFFICIENT_BALANCE = -7, // fee would bring account below reserve
           txNO_ACCOUNT = -8,           // source account not found
@@ -3714,7 +3711,7 @@ defmodule Stellar.XDR do
       struct TransactionResult
       {
           int64 feeCharged; // actual fee charged for the transaction
-      
+
           union switch (TransactionResultCode code)
           {
           case txSUCCESS:
@@ -3724,7 +3721,7 @@ defmodule Stellar.XDR do
               void;
           }
           result;
-      
+
           // reserved for future use
           union switch (int v)
           {

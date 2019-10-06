@@ -21,6 +21,7 @@ defmodule XDR.MixProject do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
+      package: package(),
 
       #docs
       name: "Elixir XDR",
@@ -54,6 +55,7 @@ defmodule XDR.MixProject do
 
   defp package do
     [
+      files: ["lib", "mix.exs", "README.md", "LICENSE", "CHANGELOG.md"],
       description: "Library for working with XDR in Elixir",
       maintainers: ["Jason Pollentier", "Revelry"],
       licenses: ["MIT"],

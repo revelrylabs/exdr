@@ -4,4 +4,3 @@
 # make sure to run bin/ci_setup first
 
 mix coveralls.json
-coveralls-multi
