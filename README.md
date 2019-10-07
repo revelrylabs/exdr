@@ -12,12 +12,12 @@ interface for working with XDR data in Elixir.
 
 ## Documentation
 
-Detailed documentation and examples can be found at [https://hexdocs.pm/elixir-xdr](https://hexdocs.pm/elixir-xdr).
+Detailed documentation and examples can be found at [https://hexdocs.pm/elixir-xdr](https://hexdocs.pm/elixir_xdr).
 
 
 ## Installation
 
-Add [`elixir-xdr`](https://hex.pm/packages/elixir-xdr) to your list of dependencies in `mix.exs`:
+Add [`elixir_xdr`](https://hex.pm/packages/elixir_xdr) to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
