@@ -1,6 +1,8 @@
-|            | Build Status |
+|            |              |
 | ---------- | ------------ |
-| `master` | [![Build Status](https://travis-ci.com/revelrylabs/elixir-xdr.svg?token=K2LyiUSDgTC1mWqq2YnM&branch=master)](https://travis-ci.com/revelrylabs/elixir-xdr) |
+| Package  | ![Elixir Version](https://img.shields.io/badge/Version-0.1.0-yellow) |
+| Support  | ![Elixir Version](https://img.shields.io/badge/Elixir-v1.7%2B-blue) |
+| CI (`master`) | [![Build Status](https://travis-ci.com/revelrylabs/elixir-xdr.svg?token=K2LyiUSDgTC1mWqq2YnM&branch=master)](https://travis-ci.com/revelrylabs/elixir-xdr) |
 | Coverage | ![Coverage Status](https://opencov.prod.revelry.net/projects/40/badge.svg) |
 
 # XDR
@@ -183,6 +185,11 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/revelr
 
 Everyone is welcome to participate in the project. We expect contributors to
 adhere to the Contributor Covenant Code of Conduct (see [CODE_OF_CONDUCT.md](https://github.com/revelrylabs/elixir-xdr/blob/master/CODE_OF_CONDUCT.md)).
+
+## Releases
+
+See [RELEASES.md](https://github.com/revelrylabs/elixir-xdr/blob/master/RELEASES.md) for details about the release process.
+
 
 ## License
 
