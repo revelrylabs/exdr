@@ -27,6 +27,7 @@ after_script:
   - bin/coverage_ci
 jobs:
   include:
+    # - if: tag IS present
     - if: tag IS blank
       stage: deploy
       script: skip
@@ -39,4 +40,5 @@ jobs:
         script: bin/deploy
         skip_cleanup: true
         on:
-          tags: true
+          # tags: true
+          tags: false

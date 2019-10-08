@@ -2,4 +2,5 @@
 
 # deploy the package to hex
 mix compile
+# mix hex.publish --yes
 mix hex.publish --yes --dry-run
