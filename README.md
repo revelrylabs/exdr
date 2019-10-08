@@ -2,8 +2,8 @@
 | ---------- | ------------ |
 | Package  | ![Elixir Version](https://img.shields.io/badge/Version-0.1.0-yellow) |
 | Support  | ![Elixir Version](https://img.shields.io/badge/Elixir-v1.7%2B-blue) |
-| CI (`master`) | [![Build Status](https://travis-ci.com/revelrylabs/elixir-xdr.svg?token=K2LyiUSDgTC1mWqq2YnM&branch=master)](https://travis-ci.com/revelrylabs/elixir-xdr) |
-| Coverage | ![Coverage Status](https://opencov.prod.revelry.net/projects/40/badge.svg) |
+| CI (`master`) | [![Build Status](https://travis-ci.com/revelrylabs/exdr.svg?token=K2LyiUSDgTC1mWqq2YnM&branch=master)](https://travis-ci.com/revelrylabs/exdr) |
+| Coverage | ![Coverage Status](https://opencov.prod.revelry.net/projects/41/badge.svg) |
 
 # XDR
 
@@ -14,17 +14,17 @@ interface for working with XDR data in Elixir.
 
 ## Documentation
 
-Detailed documentation and examples can be found at [https://hexdocs.pm/elixir-xdr](https://hexdocs.pm/elixir_xdr).
+Detailed documentation and examples can be found at [https://hexdocs.pm/exdr](https://hexdocs.pm/exdr).
 
 
 ## Installation
 
-Add [`elixir_xdr`](https://hex.pm/packages/elixir_xdr) to your list of dependencies in `mix.exs`:
+Add [`exdr`](https://hex.pm/packages/exdr) to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:elixir_xdr, "~> 0.1.0"}
+    {:exdr, "~> 0.1.0"}
   ]
 end
 ```
@@ -59,7 +59,7 @@ student_type = XDR.build_type(XDR.Type.Struct,
 )
 ```
 
-The configuration required by each built-in type varies. See the [documentation](https://hexdocs.pm/elixir-xdr/XDR.html#build_type/2) for more details.
+The configuration required by each built-in type varies. See the [documentation](https://hexdocs.pm/exdr/XDR.html#build_type/2) for more details.
 
 
 ### Adding specific values
@@ -173,24 +173,24 @@ end
 {:ok, decoded_student_b} = MyXDR.decode("Student", encoded_student_b)
 ```
 
-For a real-life example, see the [`Stellar.XDR`](https://github.com/revelrylabs/elixir-xdr/tree/master/test/support/stellar/Stellar.XDR_generated.ex) module, which was generated from [the Stellar type definitions](https://github.com/stellar/js-stellar-base/tree/master/xdr) using the [xdrgen tool](https://github.com/stellar/xdrgen).
+For a real-life example, see the [`Stellar.XDR`](https://github.com/revelrylabs/exdr/tree/master/test/support/stellar/Stellar.XDR_generated.ex) module, which was generated from [the Stellar type definitions](https://github.com/stellar/js-stellar-base/tree/master/xdr) using the [xdrgen tool](https://github.com/stellar/xdrgen).
 
 
 ## Contributing and Development
 
-See [CONTRIBUTING.md](https://github.com/revelrylabs/elixir-xdr/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/revelrylabs/exdr/blob/master/CONTRIBUTING.md)
 for guidance on how to develop for this library.
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/revelrylabs/elixir-xdr. Check out [CONTRIBUTING.md](https://github.com/revelrylabs/elixir-xdr/blob/master/CONTRIBUTING.md) for more info.
+Bug reports and pull requests are welcome on GitHub at https://github.com/revelrylabs/exdr. Check out [CONTRIBUTING.md](https://github.com/revelrylabs/exdr/blob/master/CONTRIBUTING.md) for more info.
 
 Everyone is welcome to participate in the project. We expect contributors to
-adhere to the Contributor Covenant Code of Conduct (see [CODE_OF_CONDUCT.md](https://github.com/revelrylabs/elixir-xdr/blob/master/CODE_OF_CONDUCT.md)).
+adhere to the Contributor Covenant Code of Conduct (see [CODE_OF_CONDUCT.md](https://github.com/revelrylabs/exdr/blob/master/CODE_OF_CONDUCT.md)).
 
 ## Releases
 
-See [RELEASES.md](https://github.com/revelrylabs/elixir-xdr/blob/master/RELEASES.md) for details about the release process.
+See [RELEASES.md](https://github.com/revelrylabs/exdr/blob/master/RELEASES.md) for details about the release process.
 
 
 ## License
 
-See [LICENSE](https://github.com/revelrylabs/elixir-xdr/blob/master/LICENSE) for details.
+See [LICENSE](https://github.com/revelrylabs/exdr/blob/master/LICENSE) for details.
