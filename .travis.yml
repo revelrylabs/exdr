@@ -27,13 +27,18 @@ after_script:
   - bin/coverage_ci
 jobs:
   include:
-    - stage: deploy
+    - if: tag IS present
+      env:
+        - MIX_ENV=dev
+      stage: deploy
       script: skip
       elixir: 1.9.1
       otp_release: 22.0
-      skip_cleanup: true
+      before_deploy:
+        - bin/ci_setup
       deploy:
         provider: script
         script: bin/deploy
+        skip_cleanup: true
         on:
           tags: true

@@ -1,4 +1,5 @@
 #!/bin/bash
 
 # deploy the package to hex
+mix compile
 mix hex.publish --yes
