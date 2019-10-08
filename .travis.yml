@@ -27,8 +27,7 @@ after_script:
   - bin/coverage_ci
 jobs:
   include:
-    # - if: tag IS present
-    - if: tag IS blank
+    - if: tag IS present
       env:
         - MIX_ENV=dev
       stage: deploy
@@ -42,5 +41,4 @@ jobs:
         script: bin/deploy
         skip_cleanup: true
         on:
-          # tags: true
-          all_branches: true
+          tags: true
