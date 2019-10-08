@@ -28,7 +28,6 @@ after_script:
 jobs:
   include:
     - stage: deploy
-      if: branch = master
       script: skip
       elixir: 1.9.1
       otp_release: 22.0
