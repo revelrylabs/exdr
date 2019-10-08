@@ -29,6 +29,8 @@ jobs:
   include:
     # - if: tag IS present
     - if: tag IS blank
+      env:
+        - MIX_ENV=dev
       stage: deploy
       script: skip
       elixir: 1.9.1
