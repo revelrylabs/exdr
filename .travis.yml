@@ -27,7 +27,7 @@ after_script:
   - bin/coverage_ci
 jobs:
   include:
-    - if: tag IS present
+    - if: tag IS blank
       stage: deploy
       script: skip
       elixir: 1.9.1
