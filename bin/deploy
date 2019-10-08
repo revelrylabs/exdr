@@ -1,5 +1,4 @@
 #!/bin/bash
 
-# TODO: deploy the package to hex
-
-echo "TODO: Make this do something"
+# deploy the package to hex
+mix hex.publish --yes

@@ -1,6 +1,6 @@
 #!/bin/bash
 
 # run tests
-# make sure to run bin/setup first
+# make sure to run bin/ci_setup first
 
 mix coveralls.json

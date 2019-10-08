@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# report coverage
+# make sure to run bin/ci first
+
+coveralls-multi

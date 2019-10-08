@@ -17,10 +17,14 @@ cache:
   directories:
     - _build
     - deps
+env:
+  - MIX_ENV=test
 install:
-  - bin/setup
+  - bin/ci_setup
 script:
-  - MIX_ENV=test bin/test
+  - bin/ci
+after_script:
+  - bin/coverage_ci
 jobs:
   include:
     - stage: deploy
@@ -28,8 +32,9 @@ jobs:
       script: skip
       elixir: 1.9.1
       otp_release: 22.0
+      skip_cleanup: true
       deploy:
         provider: script
         script: bin/deploy
         on:
-          all_branches: true
+          tags: true

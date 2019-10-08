@@ -112,7 +112,7 @@ defmodule XDR.Base do
 
   @doc ~S"""
   A NOOP macro that allows for extensive documentation of defined types
-  See [the generated Stellar module](https://github.com/revelrylabs/elixir-xdr/tree/master/test/support/stellar/Stellar.XDR_generated.ex)
+  See [the generated Stellar module](https://github.com/revelrylabs/exdr/tree/master/test/support/stellar/Stellar.XDR_generated.ex)
   """
   defmacro comment(_) do
   end
