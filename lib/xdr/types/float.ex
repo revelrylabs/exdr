@@ -5,7 +5,7 @@ defmodule XDR.Type.Float do
   defstruct type_name: "Float", value: nil
 
   @type value() :: float()
-  @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
+  @type t() :: %__MODULE__{type_name: String.t(), value: value()}
   @type encoding() :: <<_::32>>
 
   @doc """
@@ -61,4 +61,3 @@ defmodule XDR.Type.Float do
     end
   end
 end
-

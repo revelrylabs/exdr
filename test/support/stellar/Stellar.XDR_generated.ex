@@ -6,16 +6,17 @@ defmodule Stellar.XDR do
 
   use XDR.Base
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef opaque Value<>;
 
   ===========================================================================
-  """
+  """)
+
   define_type("Value", VariableOpaque)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct SCPBallot
@@ -25,13 +26,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpBallot", Struct,
     counter: "Uint32",
     value: "Value"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum SCPStatementType
@@ -43,7 +45,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpStatementType", Enum,
     scp_st_prepare: 0,
     scp_st_confirm: 1,
@@ -51,7 +54,7 @@ defmodule Stellar.XDR do
     scp_st_nominate: 3
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct SCPNomination
@@ -62,14 +65,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpNomination", Struct,
     quorum_set_hash: "Hash",
-    votes: build_type(VariableArray, max_length: 2147483647, type: "Value"),
-    accepted: build_type(VariableArray, max_length: 2147483647, type: "Value")
+    votes: build_type(VariableArray, max_length: 2_147_483_647, type: "Value"),
+    accepted: build_type(VariableArray, max_length: 2_147_483_647, type: "Value")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -83,7 +87,8 @@ defmodule Stellar.XDR do
               }
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpStatementPrepare", Struct,
     quorum_set_hash: "Hash",
     ballot: "ScpBallot",
@@ -93,7 +98,7 @@ defmodule Stellar.XDR do
     nh: "Uint32"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -106,7 +111,8 @@ defmodule Stellar.XDR do
               }
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpStatementConfirm", Struct,
     ballot: "ScpBallot",
     n_prepared: "Uint32",
@@ -115,7 +121,7 @@ defmodule Stellar.XDR do
     quorum_set_hash: "Hash"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -126,14 +132,15 @@ defmodule Stellar.XDR do
               }
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpStatementExternalize", Struct,
     commit: "ScpBallot",
     nh: "Uint32",
     commit_quorum_set_hash: "Hash"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (SCPStatementType type)
@@ -169,7 +176,8 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpStatementPledges", Union,
     switch_type: "ScpStatementType",
     switch_name: :type,
@@ -177,17 +185,17 @@ defmodule Stellar.XDR do
       {:scp_st_prepare, :prepare},
       {:scp_st_confirm, :confirm},
       {:scp_st_externalize, :externalize},
-      {:scp_st_nominate, :nominate},
+      {:scp_st_nominate, :nominate}
     ],
     arms: [
       prepare: "ScpStatementPrepare",
       confirm: "ScpStatementConfirm",
       externalize: "ScpStatementExternalize",
-      nominate: "ScpNomination",
+      nominate: "ScpNomination"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct SCPStatement
@@ -230,14 +238,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpStatement", Struct,
     node_id: "NodeId",
     slot_index: "Uint64",
     pledges: "ScpStatementPledges"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct SCPEnvelope
@@ -247,13 +256,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpEnvelope", Struct,
     statement: "ScpStatement",
     signature: "Signature"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct SCPQuorumSet
@@ -264,68 +274,75 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpQuorumSet", Struct,
     threshold: "Uint32",
-    validators: build_type(VariableArray, max_length: 2147483647, type: "PublicKey"),
-    inner_sets: build_type(VariableArray, max_length: 2147483647, type: "ScpQuorumSet")
+    validators: build_type(VariableArray, max_length: 2_147_483_647, type: "PublicKey"),
+    inner_sets: build_type(VariableArray, max_length: 2_147_483_647, type: "ScpQuorumSet")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef PublicKey AccountID;
 
   ===========================================================================
-  """
+  """)
+
   define_type("AccountId", "PublicKey")
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef opaque Thresholds[4];
 
   ===========================================================================
-  """
+  """)
+
   define_type("Thresholds", Opaque, 4)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef string string32<32>;
 
   ===========================================================================
-  """
+  """)
+
   define_type("String32", XDR.Type.String, 32)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef string string64<64>;
 
   ===========================================================================
-  """
+  """)
+
   define_type("String64", XDR.Type.String, 64)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef int64 SequenceNumber;
 
   ===========================================================================
-  """
+  """)
+
   define_type("SequenceNumber", "Int64")
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef opaque DataValue<64>;
 
   ===========================================================================
-  """
+  """)
+
   define_type("DataValue", VariableOpaque, 64)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum AssetType
@@ -336,14 +353,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AssetType", Enum,
     asset_type_native: 0,
     asset_type_credit_alphanum4: 1,
     asset_type_credit_alphanum12: 2
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -353,13 +371,14 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("AssetAlphaNum4", Struct,
     asset_code: build_type(Opaque, 4),
     issuer: "AccountId"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -369,13 +388,14 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("AssetAlphaNum12", Struct,
     asset_code: build_type(Opaque, 12),
     issuer: "AccountId"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union Asset switch (AssetType type)
@@ -401,22 +421,23 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("Asset", Union,
     switch_type: "AssetType",
     switch_name: :type,
     switches: [
       {:asset_type_native, XDR.Type.Void},
       {:asset_type_credit_alphanum4, :alpha_num4},
-      {:asset_type_credit_alphanum12, :alpha_num12},
+      {:asset_type_credit_alphanum12, :alpha_num12}
     ],
     arms: [
       alpha_num4: "AssetAlphaNum4",
-      alpha_num12: "AssetAlphaNum12",
+      alpha_num12: "AssetAlphaNum12"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct Price
@@ -426,13 +447,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("Price", Struct,
     n: "Int32",
     d: "Int32"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct Liabilities
@@ -442,13 +464,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("Liabilities", Struct,
     buying: "Int64",
     selling: "Int64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum ThresholdIndexes
@@ -460,7 +483,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ThresholdIndices", Enum,
     threshold_master_weight: 0,
     threshold_low: 1,
@@ -468,7 +492,7 @@ defmodule Stellar.XDR do
     threshold_high: 3
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum LedgerEntryType
@@ -480,7 +504,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerEntryType", Enum,
     account: 0,
     trustline: 1,
@@ -488,7 +513,7 @@ defmodule Stellar.XDR do
     datum: 3
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct Signer
@@ -498,13 +523,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("Signer", Struct,
     key: "SignerKey",
     weight: "Uint32"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum AccountFlags
@@ -522,23 +548,25 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AccountFlags", Enum,
     auth_required_flag: 1,
     auth_revocable_flag: 2,
     auth_immutable_flag: 4
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       const MASK_ACCOUNT_FLAGS = 0x7;
 
   ===========================================================================
-  """
-  define_type("MASK_ACCOUNT_FLAGS", Const, 0x7);
+  """)
 
-  comment ~S"""
+  define_type("MASK_ACCOUNT_FLAGS", Const, 0x7)
+
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -548,18 +576,18 @@ defmodule Stellar.XDR do
                   }
 
   ===========================================================================
-  """
+  """)
+
   define_type("AccountEntryV1Ext", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -575,13 +603,14 @@ defmodule Stellar.XDR do
               }
 
   ===========================================================================
-  """
+  """)
+
   define_type("AccountEntryV1", Struct,
     liabilities: "Liabilities",
     ext: "AccountEntryV1Ext"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -603,20 +632,21 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("AccountEntryExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
       {0, XDR.Type.Void},
-      {1, :v1},
+      {1, :v1}
     ],
     arms: [
-      v1: "AccountEntryV1",
+      v1: "AccountEntryV1"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct AccountEntry
@@ -659,7 +689,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AccountEntry", Struct,
     account_id: "AccountId",
     balance: "Int64",
@@ -673,7 +704,7 @@ defmodule Stellar.XDR do
     ext: "AccountEntryExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum TrustLineFlags
@@ -683,21 +714,21 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("TrustLineFlags", Enum,
-    authorized_flag: 1
-  )
+  """)
 
-  comment ~S"""
+  define_type("TrustLineFlags", Enum, authorized_flag: 1)
+
+  comment(~S"""
   === xdr source ============================================================
 
       const MASK_TRUSTLINE_FLAGS = 1;
 
   ===========================================================================
-  """
-  define_type("MASK_TRUSTLINE_FLAGS", Const, 1);
+  """)
 
-  comment ~S"""
+  define_type("MASK_TRUSTLINE_FLAGS", Const, 1)
+
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -707,18 +738,18 @@ defmodule Stellar.XDR do
                   }
 
   ===========================================================================
-  """
+  """)
+
   define_type("TrustLineEntryV1Ext", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -734,13 +765,14 @@ defmodule Stellar.XDR do
               }
 
   ===========================================================================
-  """
+  """)
+
   define_type("TrustLineEntryV1", Struct,
     liabilities: "Liabilities",
     ext: "TrustLineEntryV1Ext"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -762,20 +794,21 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("TrustLineEntryExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
       {0, XDR.Type.Void},
-      {1, :v1},
+      {1, :v1}
     ],
     arms: [
-      v1: "TrustLineEntryV1",
+      v1: "TrustLineEntryV1"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TrustLineEntry
@@ -810,7 +843,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TrustLineEntry", Struct,
     account_id: "AccountId",
     asset: "Asset",
@@ -820,7 +854,7 @@ defmodule Stellar.XDR do
     ext: "TrustLineEntryExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum OfferEntryFlags
@@ -830,21 +864,21 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("OfferEntryFlags", Enum,
-    passive_flag: 1
-  )
+  """)
 
-  comment ~S"""
+  define_type("OfferEntryFlags", Enum, passive_flag: 1)
+
+  comment(~S"""
   === xdr source ============================================================
 
       const MASK_OFFERENTRY_FLAGS = 1;
 
   ===========================================================================
-  """
-  define_type("MASK_OFFERENTRY_FLAGS", Const, 1);
+  """)
 
-  comment ~S"""
+  define_type("MASK_OFFERENTRY_FLAGS", Const, 1)
+
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -854,18 +888,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("OfferEntryExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct OfferEntry
@@ -894,7 +928,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("OfferEntry", Struct,
     seller_id: "AccountId",
     offer_id: "Uint64",
@@ -906,7 +941,7 @@ defmodule Stellar.XDR do
     ext: "OfferEntryExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -916,18 +951,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("DataEntryExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct DataEntry
@@ -946,7 +981,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("DataEntry", Struct,
     account_id: "AccountId",
     data_name: "String64",
@@ -954,7 +990,7 @@ defmodule Stellar.XDR do
     ext: "DataEntryExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (LedgerEntryType type)
@@ -970,7 +1006,8 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerEntryData", Union,
     switch_type: "LedgerEntryType",
     switch_name: :type,
@@ -978,17 +1015,17 @@ defmodule Stellar.XDR do
       {:account, :account},
       {:trustline, :trust_line},
       {:offer, :offer},
-      {:datum, :data},
+      {:datum, :data}
     ],
     arms: [
       account: "AccountEntry",
       trust_line: "TrustLineEntry",
       offer: "OfferEntry",
-      data: "DataEntry",
+      data: "DataEntry"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -998,18 +1035,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerEntryExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct LedgerEntry
@@ -1039,14 +1076,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerEntry", Struct,
     last_modified_ledger_seq: "Uint32",
     data: "LedgerEntryData",
     ext: "LedgerEntryExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum EnvelopeType
@@ -1057,23 +1095,25 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("EnvelopeType", Enum,
     envelope_type_scp: 1,
     envelope_type_tx: 2,
     envelope_type_auth: 3
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef opaque UpgradeType<128>;
 
   ===========================================================================
-  """
+  """)
+
   define_type("UpgradeType", VariableOpaque, 128)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -1083,18 +1123,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("StellarValueExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct StellarValue
@@ -1119,7 +1159,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("StellarValue", Struct,
     tx_set_hash: "Hash",
     close_time: "Uint64",
@@ -1127,7 +1168,7 @@ defmodule Stellar.XDR do
     ext: "StellarValueExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -1137,18 +1178,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerHeaderExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct LedgerHeader
@@ -1190,7 +1231,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerHeader", Struct,
     ledger_version: "Uint32",
     previous_ledger_hash: "Hash",
@@ -1209,7 +1251,7 @@ defmodule Stellar.XDR do
     ext: "LedgerHeaderExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum LedgerUpgradeType
@@ -1221,7 +1263,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerUpgradeType", Enum,
     ledger_upgrade_version: 1,
     ledger_upgrade_base_fee: 2,
@@ -1229,7 +1272,7 @@ defmodule Stellar.XDR do
     ledger_upgrade_base_reserve: 4
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union LedgerUpgrade switch (LedgerUpgradeType type)
@@ -1245,7 +1288,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerUpgrade", Union,
     switch_type: "LedgerUpgradeType",
     switch_name: :type,
@@ -1253,17 +1297,17 @@ defmodule Stellar.XDR do
       {:ledger_upgrade_version, :new_ledger_version},
       {:ledger_upgrade_base_fee, :new_base_fee},
       {:ledger_upgrade_max_tx_set_size, :new_max_tx_set_size},
-      {:ledger_upgrade_base_reserve, :new_base_reserve},
+      {:ledger_upgrade_base_reserve, :new_base_reserve}
     ],
     arms: [
       new_ledger_version: "Uint32",
       new_base_fee: "Uint32",
       new_max_tx_set_size: "Uint32",
-      new_base_reserve: "Uint32",
+      new_base_reserve: "Uint32"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -1272,12 +1316,11 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
-  define_type("LedgerKeyAccount", Struct,
-    account_id: "AccountId"
-  )
+  """)
 
-  comment ~S"""
+  define_type("LedgerKeyAccount", Struct, account_id: "AccountId")
+
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -1287,13 +1330,14 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerKeyTrustLine", Struct,
     account_id: "AccountId",
     asset: "Asset"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -1303,13 +1347,14 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerKeyOffer", Struct,
     seller_id: "AccountId",
     offer_id: "Uint64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -1319,13 +1364,14 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerKeyData", Struct,
     account_id: "AccountId",
     data_name: "String64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union LedgerKey switch (LedgerEntryType type)
@@ -1359,7 +1405,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerKey", Union,
     switch_type: "LedgerEntryType",
     switch_name: :type,
@@ -1367,17 +1414,17 @@ defmodule Stellar.XDR do
       {:account, :account},
       {:trustline, :trust_line},
       {:offer, :offer},
-      {:datum, :data},
+      {:datum, :data}
     ],
     arms: [
       account: "LedgerKeyAccount",
       trust_line: "LedgerKeyTrustLine",
       offer: "LedgerKeyOffer",
-      data: "LedgerKeyData",
+      data: "LedgerKeyData"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum BucketEntryType
@@ -1387,13 +1434,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("BucketEntryType", Enum,
     liveentry: 0,
     deadentry: 1
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union BucketEntry switch (BucketEntryType type)
@@ -1406,21 +1454,22 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("BucketEntry", Union,
     switch_type: "BucketEntryType",
     switch_name: :type,
     switches: [
       {:liveentry, :live_entry},
-      {:deadentry, :dead_entry},
+      {:deadentry, :dead_entry}
     ],
     arms: [
       live_entry: "LedgerEntry",
-      dead_entry: "LedgerKey",
+      dead_entry: "LedgerKey"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TransactionSet
@@ -1430,13 +1479,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionSet", Struct,
     previous_ledger_hash: "Hash",
-    txes: build_type(VariableArray, max_length: 2147483647, type: "TransactionEnvelope")
+    txes: build_type(VariableArray, max_length: 2_147_483_647, type: "TransactionEnvelope")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TransactionResultPair
@@ -1446,13 +1496,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionResultPair", Struct,
     transaction_hash: "Hash",
     result: "TransactionResult"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TransactionResultSet
@@ -1461,12 +1512,13 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionResultSet", Struct,
-    results: build_type(VariableArray, max_length: 2147483647, type: "TransactionResultPair")
+    results: build_type(VariableArray, max_length: 2_147_483_647, type: "TransactionResultPair")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -1476,18 +1528,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionHistoryEntryExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TransactionHistoryEntry
@@ -1505,14 +1557,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionHistoryEntry", Struct,
     ledger_seq: "Uint32",
     tx_set: "TransactionSet",
     ext: "TransactionHistoryEntryExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -1522,18 +1575,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionHistoryResultEntryExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TransactionHistoryResultEntry
@@ -1551,14 +1604,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionHistoryResultEntry", Struct,
     ledger_seq: "Uint32",
     tx_result_set: "TransactionResultSet",
     ext: "TransactionHistoryResultEntryExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -1568,18 +1622,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerHeaderHistoryEntryExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct LedgerHeaderHistoryEntry
@@ -1597,14 +1651,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerHeaderHistoryEntry", Struct,
     hash: "Hash",
     header: "LedgerHeader",
     ext: "LedgerHeaderHistoryEntryExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct LedgerSCPMessages
@@ -1614,13 +1669,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerScpMessages", Struct,
     ledger_seq: "Uint32",
-    messages: build_type(VariableArray, max_length: 2147483647, type: "ScpEnvelope")
+    messages: build_type(VariableArray, max_length: 2_147_483_647, type: "ScpEnvelope")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct SCPHistoryEntryV0
@@ -1630,13 +1686,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpHistoryEntryV0", Struct,
-    quorum_sets: build_type(VariableArray, max_length: 2147483647, type: "ScpQuorumSet"),
+    quorum_sets: build_type(VariableArray, max_length: 2_147_483_647, type: "ScpQuorumSet"),
     ledger_messages: "LedgerScpMessages"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union SCPHistoryEntry switch (int v)
@@ -1646,19 +1703,20 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ScpHistoryEntry", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, :v0},
+      {0, :v0}
     ],
     arms: [
-      v0: "ScpHistoryEntryV0",
+      v0: "ScpHistoryEntryV0"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum LedgerEntryChangeType
@@ -1670,7 +1728,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerEntryChangeType", Enum,
     ledger_entry_created: 0,
     ledger_entry_updated: 1,
@@ -1678,7 +1737,7 @@ defmodule Stellar.XDR do
     ledger_entry_state: 3
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union LedgerEntryChange switch (LedgerEntryChangeType type)
@@ -1694,7 +1753,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("LedgerEntryChange", Union,
     switch_type: "LedgerEntryChangeType",
     switch_name: :type,
@@ -1702,26 +1762,30 @@ defmodule Stellar.XDR do
       {:ledger_entry_created, :created},
       {:ledger_entry_updated, :updated},
       {:ledger_entry_removed, :removed},
-      {:ledger_entry_state, :state},
+      {:ledger_entry_state, :state}
     ],
     arms: [
       created: "LedgerEntry",
       updated: "LedgerEntry",
       removed: "LedgerKey",
-      state: "LedgerEntry",
+      state: "LedgerEntry"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef LedgerEntryChange LedgerEntryChanges<>;
 
   ===========================================================================
-  """
-  define_type("LedgerEntryChanges", VariableArray, max_length: 2147483647, type: "LedgerEntryChange")
+  """)
 
-  comment ~S"""
+  define_type("LedgerEntryChanges", VariableArray,
+    max_length: 2_147_483_647,
+    type: "LedgerEntryChange"
+  )
+
+  comment(~S"""
   === xdr source ============================================================
 
       struct OperationMeta
@@ -1730,12 +1794,11 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("OperationMeta", Struct,
-    changes: "LedgerEntryChanges"
-  )
+  """)
 
-  comment ~S"""
+  define_type("OperationMeta", Struct, changes: "LedgerEntryChanges")
+
+  comment(~S"""
   === xdr source ============================================================
 
       struct TransactionMetaV1
@@ -1745,13 +1808,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionMetaV1", Struct,
     tx_changes: "LedgerEntryChanges",
-    operations: build_type(VariableArray, max_length: 2147483647, type: "OperationMeta")
+    operations: build_type(VariableArray, max_length: 2_147_483_647, type: "OperationMeta")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union TransactionMeta switch (int v)
@@ -1763,21 +1827,22 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionMeta", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
       {0, :operations},
-      {1, :v1},
+      {1, :v1}
     ],
     arms: [
-      operations: build_type(VariableArray, max_length: 2147483647, type: "OperationMeta"),
-      v1: "TransactionMetaV1",
+      operations: build_type(VariableArray, max_length: 2_147_483_647, type: "OperationMeta"),
+      v1: "TransactionMetaV1"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum ErrorCode
@@ -1790,7 +1855,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ErrorCode", Enum,
     err_misc: 0,
     err_datum: 1,
@@ -1799,7 +1865,7 @@ defmodule Stellar.XDR do
     err_load: 4
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct Error
@@ -1809,13 +1875,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("Error", Struct,
     code: "ErrorCode",
     msg: build_type(XDR.Type.String, 100)
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct AuthCert
@@ -1826,14 +1893,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AuthCert", Struct,
     pubkey: "Curve25519Public",
     expiration: "Uint64",
     sig: "Signature"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct Hello
@@ -1850,7 +1918,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("Hello", Struct,
     ledger_version: "Uint32",
     overlay_version: "Uint32",
@@ -1863,7 +1932,7 @@ defmodule Stellar.XDR do
     nonce: "Uint256"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct Auth
@@ -1874,12 +1943,11 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("Auth", Struct,
-    unused: build_type(Int)
-  )
+  """)
 
-  comment ~S"""
+  define_type("Auth", Struct, unused: build_type(Int))
+
+  comment(~S"""
   === xdr source ============================================================
 
       enum IPAddrType
@@ -1889,13 +1957,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("IpAddrType", Enum,
     i_pv4: 0,
     i_pv6: 1
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (IPAddrType type)
@@ -1907,21 +1976,22 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("PeerAddressIp", Union,
     switch_type: "IpAddrType",
     switch_name: :type,
     switches: [
       {:i_pv4, :ipv4},
-      {:i_pv6, :ipv6},
+      {:i_pv6, :ipv6}
     ],
     arms: [
       ipv4: build_type(Opaque, 4),
-      ipv6: build_type(Opaque, 16),
+      ipv6: build_type(Opaque, 16)
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct PeerAddress
@@ -1939,14 +2009,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("PeerAddress", Struct,
     ip: "PeerAddressIp",
     port: "Uint32",
     num_failures: "Uint32"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum MessageType
@@ -1974,7 +2045,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("MessageType", Enum,
     error_msg: 0,
     auth: 2,
@@ -1991,7 +2063,7 @@ defmodule Stellar.XDR do
     hello: 13
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct DontHave
@@ -2001,13 +2073,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("DontHave", Struct,
     type: "MessageType",
     req_hash: "Uint256"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union StellarMessage switch (MessageType type)
@@ -2045,7 +2118,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("StellarMessage", Union,
     switch_type: "MessageType",
     switch_name: :type,
@@ -2062,7 +2136,7 @@ defmodule Stellar.XDR do
       {:get_scp_quorumset, :q_set_hash},
       {:scp_quorumset, :q_set},
       {:scp_message, :envelope},
-      {:get_scp_state, :get_scp_ledger_seq},
+      {:get_scp_state, :get_scp_ledger_seq}
     ],
     arms: [
       error: "Error",
@@ -2076,11 +2150,11 @@ defmodule Stellar.XDR do
       q_set_hash: "Uint256",
       q_set: "ScpQuorumSet",
       envelope: "StellarMessage",
-      get_scp_ledger_seq: "Uint32",
+      get_scp_ledger_seq: "Uint32"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -2091,14 +2165,15 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("AuthenticatedMessageV0", Struct,
     sequence: "Uint64",
     message: "StellarMessage",
     mac: "HmacSha256Mac"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union AuthenticatedMessage switch (uint32 v)
@@ -2113,19 +2188,20 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AuthenticatedMessage", Union,
     switch_type: "Uint32",
     switch_name: :v,
     switches: [
-      {0, :v0},
+      {0, :v0}
     ],
     arms: [
-      v0: "AuthenticatedMessageV0",
+      v0: "AuthenticatedMessageV0"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct DecoratedSignature
@@ -2135,13 +2211,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("DecoratedSignature", Struct,
     hint: "SignatureHint",
     signature: "Signature"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum OperationType
@@ -2161,7 +2238,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("OperationType", Enum,
     create_account: 0,
     payment: 1,
@@ -2177,7 +2255,7 @@ defmodule Stellar.XDR do
     bump_sequence: 11
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct CreateAccountOp
@@ -2187,13 +2265,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("CreateAccountOp", Struct,
     destination: "AccountId",
     starting_balance: "Int64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct PaymentOp
@@ -2204,14 +2283,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("PaymentOp", Struct,
     destination: "AccountId",
     asset: "Asset",
     amount: "Int64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct PathPaymentOp
@@ -2229,7 +2309,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("PathPaymentOp", Struct,
     send_asset: "Asset",
     send_max: "Int64",
@@ -2239,7 +2320,7 @@ defmodule Stellar.XDR do
     path: build_type(VariableArray, max_length: 5, type: "Asset")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct ManageOfferOp
@@ -2254,7 +2335,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ManageOfferOp", Struct,
     selling: "Asset",
     buying: "Asset",
@@ -2263,7 +2345,7 @@ defmodule Stellar.XDR do
     offer_id: "Uint64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct CreatePassiveOfferOp
@@ -2275,7 +2357,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("CreatePassiveOfferOp", Struct,
     selling: "Asset",
     buying: "Asset",
@@ -2283,7 +2366,7 @@ defmodule Stellar.XDR do
     price: "Price"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct SetOptionsOp
@@ -2307,7 +2390,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("SetOptionsOp", Struct,
     inflation_dest: build_type(Optional, "AccountId"),
     clear_flags: build_type(Optional, "Uint32"),
@@ -2320,7 +2404,7 @@ defmodule Stellar.XDR do
     signer: build_type(Optional, "Signer")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct ChangeTrustOp
@@ -2332,13 +2416,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ChangeTrustOp", Struct,
     line: "Asset",
     limit: "Int64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (AssetType type)
@@ -2354,21 +2439,22 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("AllowTrustOpAsset", Union,
     switch_type: "AssetType",
     switch_name: :type,
     switches: [
       {:asset_type_credit_alphanum4, :asset_code4},
-      {:asset_type_credit_alphanum12, :asset_code12},
+      {:asset_type_credit_alphanum12, :asset_code12}
     ],
     arms: [
       asset_code4: build_type(Opaque, 4),
-      asset_code12: build_type(Opaque, 12),
+      asset_code12: build_type(Opaque, 12)
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct AllowTrustOp
@@ -2391,14 +2477,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AllowTrustOp", Struct,
     trustor: "AccountId",
     asset: "AllowTrustOpAsset",
     authorize: build_type(Bool)
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct ManageDataOp
@@ -2408,13 +2495,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ManageDataOp", Struct,
     data_name: "String64",
     data_value: build_type(Optional, "DataValue")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct BumpSequenceOp
@@ -2423,12 +2511,11 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("BumpSequenceOp", Struct,
-    bump_to: "SequenceNumber"
-  )
+  """)
 
-  comment ~S"""
+  define_type("BumpSequenceOp", Struct, bump_to: "SequenceNumber")
+
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (OperationType type)
@@ -2460,7 +2547,8 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("OperationBody", Union,
     switch_type: "OperationType",
     switch_name: :type,
@@ -2476,7 +2564,7 @@ defmodule Stellar.XDR do
       {:account_merge, :destination},
       {:inflation, XDR.Type.Void},
       {:manage_datum, :manage_data_op},
-      {:bump_sequence, :bump_sequence_op},
+      {:bump_sequence, :bump_sequence_op}
     ],
     arms: [
       create_account_op: "CreateAccountOp",
@@ -2489,11 +2577,11 @@ defmodule Stellar.XDR do
       allow_trust_op: "AllowTrustOp",
       destination: "AccountId",
       manage_data_op: "ManageDataOp",
-      bump_sequence_op: "BumpSequenceOp",
+      bump_sequence_op: "BumpSequenceOp"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct Operation
@@ -2534,13 +2622,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("Operation", Struct,
     source_account: build_type(Optional, "AccountId"),
     body: "OperationBody"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum MemoType
@@ -2553,7 +2642,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("MemoType", Enum,
     memo_none: 0,
     memo_text: 1,
@@ -2562,7 +2652,7 @@ defmodule Stellar.XDR do
     memo_return: 4
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union Memo switch (MemoType type)
@@ -2580,7 +2670,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("Memo", Union,
     switch_type: "MemoType",
     switch_name: :type,
@@ -2589,17 +2680,17 @@ defmodule Stellar.XDR do
       {:memo_text, :text},
       {:memo_id, :id},
       {:memo_hash, :hash},
-      {:memo_return, :ret_hash},
+      {:memo_return, :ret_hash}
     ],
     arms: [
       text: build_type(XDR.Type.String, 28),
       id: "Uint64",
       hash: "Hash",
-      ret_hash: "Hash",
+      ret_hash: "Hash"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TimeBounds
@@ -2609,13 +2700,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TimeBounds", Struct,
     min_time: "Uint64",
     max_time: "Uint64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -2625,18 +2717,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct Transaction
@@ -2667,7 +2759,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("Transaction", Struct,
     source_account: "AccountId",
     fee: "Uint32",
@@ -2678,7 +2771,7 @@ defmodule Stellar.XDR do
     ext: "TransactionExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (EnvelopeType type)
@@ -2689,19 +2782,20 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionSignaturePayloadTaggedTransaction", Union,
     switch_type: "EnvelopeType",
     switch_name: :type,
     switches: [
-      {:envelope_type_tx, :tx},
+      {:envelope_type_tx, :tx}
     ],
     arms: [
-      tx: "Transaction",
+      tx: "Transaction"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TransactionSignaturePayload
@@ -2717,13 +2811,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionSignaturePayload", Struct,
     network_id: "Hash",
     tagged_transaction: "TransactionSignaturePayloadTaggedTransaction"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TransactionEnvelope
@@ -2735,13 +2830,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionEnvelope", Struct,
     tx: "Transaction",
     signatures: build_type(VariableArray, max_length: 20, type: "DecoratedSignature")
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct ClaimOfferAtom
@@ -2760,7 +2856,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ClaimOfferAtom", Struct,
     seller_id: "AccountId",
     offer_id: "Uint64",
@@ -2770,7 +2867,7 @@ defmodule Stellar.XDR do
     amount_bought: "Int64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum CreateAccountResultCode
@@ -2787,7 +2884,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("CreateAccountResultCode", Enum,
     create_account_success: 0,
     create_account_malformed: -1,
@@ -2796,7 +2894,7 @@ defmodule Stellar.XDR do
     create_account_already_exist: -4
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union CreateAccountResult switch (CreateAccountResultCode code)
@@ -2808,18 +2906,18 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("CreateAccountResult", Union,
     switch_type: "CreateAccountResultCode",
     switch_name: :code,
     switches: [
-      {:create_account_success, XDR.Type.Void},
+      {:create_account_success, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum PaymentResultCode
@@ -2840,7 +2938,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("PaymentResultCode", Enum,
     payment_success: 0,
     payment_malformed: -1,
@@ -2854,7 +2953,7 @@ defmodule Stellar.XDR do
     payment_no_issuer: -9
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union PaymentResult switch (PaymentResultCode code)
@@ -2866,18 +2965,18 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("PaymentResult", Union,
     switch_type: "PaymentResultCode",
     switch_name: :code,
     switches: [
-      {:payment_success, XDR.Type.Void},
+      {:payment_success, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum PathPaymentResultCode
@@ -2901,7 +3000,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("PathPaymentResultCode", Enum,
     path_payment_success: 0,
     path_payment_malformed: -1,
@@ -2918,7 +3018,7 @@ defmodule Stellar.XDR do
     path_payment_over_sendmax: -12
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct SimplePaymentResult
@@ -2929,14 +3029,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("SimplePaymentResult", Struct,
     destination: "AccountId",
     asset: "Asset",
     amount: "Int64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct
@@ -2946,13 +3047,14 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("PathPaymentResultSuccess", Struct,
-    offers: build_type(VariableArray, max_length: 2147483647, type: "ClaimOfferAtom"),
+    offers: build_type(VariableArray, max_length: 2_147_483_647, type: "ClaimOfferAtom"),
     last: "SimplePaymentResult"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union PathPaymentResult switch (PathPaymentResultCode code)
@@ -2970,21 +3072,22 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("PathPaymentResult", Union,
     switch_type: "PathPaymentResultCode",
     switch_name: :code,
     switches: [
       {:path_payment_success, :success},
-      {:path_payment_no_issuer, :no_issuer},
+      {:path_payment_no_issuer, :no_issuer}
     ],
     arms: [
       success: "PathPaymentResultSuccess",
-      no_issuer: "Asset",
+      no_issuer: "Asset"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum ManageOfferResultCode
@@ -3011,7 +3114,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ManageOfferResultCode", Enum,
     manage_offer_success: 0,
     manage_offer_malformed: -1,
@@ -3028,7 +3132,7 @@ defmodule Stellar.XDR do
     manage_offer_low_reserve: -12
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum ManageOfferEffect
@@ -3039,14 +3143,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ManageOfferEffect", Enum,
     manage_offer_created: 0,
     manage_offer_updated: 1,
     manage_offer_deleted: 2
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (ManageOfferEffect effect)
@@ -3059,20 +3164,21 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("ManageOfferSuccessResultOffer", Union,
     switch_type: "ManageOfferEffect",
     switch_name: :effect,
     switches: [
       {:manage_offer_created, :offer},
-      {:manage_offer_updated, :offer},
+      {:manage_offer_updated, :offer}
     ],
     arms: [
-      offer: "OfferEntry",
+      offer: "OfferEntry"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct ManageOfferSuccessResult
@@ -3092,13 +3198,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ManageOfferSuccessResult", Struct,
-    offers_claimed: build_type(VariableArray, max_length: 2147483647, type: "ClaimOfferAtom"),
+    offers_claimed: build_type(VariableArray, max_length: 2_147_483_647, type: "ClaimOfferAtom"),
     offer: "ManageOfferSuccessResultOffer"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union ManageOfferResult switch (ManageOfferResultCode code)
@@ -3110,19 +3217,20 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ManageOfferResult", Union,
     switch_type: "ManageOfferResultCode",
     switch_name: :code,
     switches: [
-      {:manage_offer_success, :success},
+      {:manage_offer_success, :success}
     ],
     arms: [
-      success: "ManageOfferSuccessResult",
+      success: "ManageOfferSuccessResult"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum SetOptionsResultCode
@@ -3142,7 +3250,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("SetOptionsResultCode", Enum,
     set_options_success: 0,
     set_options_low_reserve: -1,
@@ -3156,7 +3265,7 @@ defmodule Stellar.XDR do
     set_options_invalid_home_domain: -9
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union SetOptionsResult switch (SetOptionsResultCode code)
@@ -3168,18 +3277,18 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("SetOptionsResult", Union,
     switch_type: "SetOptionsResultCode",
     switch_name: :code,
     switches: [
-      {:set_options_success, XDR.Type.Void},
+      {:set_options_success, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum ChangeTrustResultCode
@@ -3197,7 +3306,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ChangeTrustResultCode", Enum,
     change_trust_success: 0,
     change_trust_malformed: -1,
@@ -3207,7 +3317,7 @@ defmodule Stellar.XDR do
     change_trust_self_not_allowed: -5
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union ChangeTrustResult switch (ChangeTrustResultCode code)
@@ -3219,18 +3329,18 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ChangeTrustResult", Union,
     switch_type: "ChangeTrustResultCode",
     switch_name: :code,
     switches: [
-      {:change_trust_success, XDR.Type.Void},
+      {:change_trust_success, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum AllowTrustResultCode
@@ -3247,7 +3357,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AllowTrustResultCode", Enum,
     allow_trust_success: 0,
     allow_trust_malformed: -1,
@@ -3257,7 +3368,7 @@ defmodule Stellar.XDR do
     allow_trust_self_not_allowed: -5
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union AllowTrustResult switch (AllowTrustResultCode code)
@@ -3269,18 +3380,18 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AllowTrustResult", Union,
     switch_type: "AllowTrustResultCode",
     switch_name: :code,
     switches: [
-      {:allow_trust_success, XDR.Type.Void},
+      {:allow_trust_success, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum AccountMergeResultCode
@@ -3298,7 +3409,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AccountMergeResultCode", Enum,
     account_merge_success: 0,
     account_merge_malformed: -1,
@@ -3309,7 +3421,7 @@ defmodule Stellar.XDR do
     account_merge_dest_full: -6
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union AccountMergeResult switch (AccountMergeResultCode code)
@@ -3321,19 +3433,20 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("AccountMergeResult", Union,
     switch_type: "AccountMergeResultCode",
     switch_name: :code,
     switches: [
-      {:account_merge_success, :source_account_balance},
+      {:account_merge_success, :source_account_balance}
     ],
     arms: [
-      source_account_balance: "Int64",
+      source_account_balance: "Int64"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum InflationResultCode
@@ -3345,13 +3458,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("InflationResultCode", Enum,
     inflation_success: 0,
     inflation_not_time: -1
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct InflationPayout // or use PaymentResultAtom to limit types?
@@ -3361,13 +3475,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("InflationPayout", Struct,
     destination: "AccountId",
     amount: "Int64"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union InflationResult switch (InflationResultCode code)
@@ -3379,19 +3494,20 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("InflationResult", Union,
     switch_type: "InflationResultCode",
     switch_name: :code,
     switches: [
-      {:inflation_success, :payouts},
+      {:inflation_success, :payouts}
     ],
     arms: [
-      payouts: build_type(VariableArray, max_length: 2147483647, type: "InflationPayout"),
+      payouts: build_type(VariableArray, max_length: 2_147_483_647, type: "InflationPayout")
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum ManageDataResultCode
@@ -3408,7 +3524,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ManageDataResultCode", Enum,
     manage_data_success: 0,
     manage_data_not_supported_yet: -1,
@@ -3417,7 +3534,7 @@ defmodule Stellar.XDR do
     manage_data_invalid_name: -4
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union ManageDataResult switch (ManageDataResultCode code)
@@ -3429,18 +3546,18 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("ManageDataResult", Union,
     switch_type: "ManageDataResultCode",
     switch_name: :code,
     switches: [
-      {:manage_data_success, XDR.Type.Void},
+      {:manage_data_success, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum BumpSequenceResultCode
@@ -3452,13 +3569,14 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("BumpSequenceResultCode", Enum,
     bump_sequence_success: 0,
     bump_sequence_bad_seq: -1
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union BumpSequenceResult switch (BumpSequenceResultCode code)
@@ -3470,18 +3588,18 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("BumpSequenceResult", Union,
     switch_type: "BumpSequenceResultCode",
     switch_name: :code,
     switches: [
-      {:bump_sequence_success, XDR.Type.Void},
+      {:bump_sequence_success, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum OperationResultCode
@@ -3494,7 +3612,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("OperationResultCode", Enum,
     op_inner: 0,
     op_bad_auth: -1,
@@ -3502,7 +3621,7 @@ defmodule Stellar.XDR do
     op_not_supported: -3
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (OperationType type)
@@ -3534,7 +3653,8 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("OperationResultTr", Union,
     switch_type: "OperationType",
     switch_name: :type,
@@ -3550,7 +3670,7 @@ defmodule Stellar.XDR do
       {:account_merge, :account_merge_result},
       {:inflation, :inflation_result},
       {:manage_datum, :manage_data_result},
-      {:bump_sequence, :bump_seq_result},
+      {:bump_sequence, :bump_seq_result}
     ],
     arms: [
       create_account_result: "CreateAccountResult",
@@ -3564,11 +3684,11 @@ defmodule Stellar.XDR do
       account_merge_result: "AccountMergeResult",
       inflation_result: "InflationResult",
       manage_data_result: "ManageDataResult",
-      bump_seq_result: "BumpSequenceResult",
+      bump_seq_result: "BumpSequenceResult"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union OperationResult switch (OperationResultCode code)
@@ -3607,19 +3727,20 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("OperationResult", Union,
     switch_type: "OperationResultCode",
     switch_name: :code,
     switches: [
-      {:op_inner, :tr},
+      {:op_inner, :tr}
     ],
     arms: [
-      tr: "OperationResultTr",
+      tr: "OperationResultTr"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum TransactionResultCode
@@ -3642,7 +3763,8 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionResultCode", Enum,
     tx_success: 0,
     tx_failed: -1,
@@ -3658,7 +3780,7 @@ defmodule Stellar.XDR do
     tx_internal_error: -11
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (TransactionResultCode code)
@@ -3671,20 +3793,21 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionResultResult", Union,
     switch_type: "TransactionResultCode",
     switch_name: :code,
     switches: [
       {:tx_success, :results},
-      {:tx_failed, :results},
+      {:tx_failed, :results}
     ],
     arms: [
-      results: build_type(VariableArray, max_length: 2147483647, type: "OperationResult"),
+      results: build_type(VariableArray, max_length: 2_147_483_647, type: "OperationResult")
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union switch (int v)
@@ -3694,18 +3817,18 @@ defmodule Stellar.XDR do
           }
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionResultExt", Union,
     switch_type: build_type(Int),
     switch_name: :v,
     switches: [
-      {0, XDR.Type.Void},
+      {0, XDR.Type.Void}
     ],
-    arms: [
-    ]
+    arms: []
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct TransactionResult
@@ -3732,68 +3855,75 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("TransactionResult", Struct,
     fee_charged: "Int64",
     result: "TransactionResultResult",
     ext: "TransactionResultExt"
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef opaque Hash[32];
 
   ===========================================================================
-  """
+  """)
+
   define_type("Hash", Opaque, 32)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef opaque uint256[32];
 
   ===========================================================================
-  """
+  """)
+
   define_type("Uint256", Opaque, 32)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef unsigned int uint32;
 
   ===========================================================================
-  """
+  """)
+
   define_type("Uint32", UnsignedInt)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef int int32;
 
   ===========================================================================
-  """
+  """)
+
   define_type("Int32", Int)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef unsigned hyper uint64;
 
   ===========================================================================
-  """
+  """)
+
   define_type("Uint64", UnsignedHyperInt)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef hyper int64;
 
   ===========================================================================
-  """
+  """)
+
   define_type("Int64", HyperInt)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum CryptoKeyType
@@ -3804,14 +3934,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("CryptoKeyType", Enum,
     key_type_ed25519: 0,
     key_type_pre_auth_tx: 1,
     key_type_hash_x: 2
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       enum PublicKeyType
@@ -3820,12 +3951,11 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("PublicKeyType", Enum,
-    public_key_type_ed25519: 0
-  )
+  """)
 
-  comment ~S"""
+  define_type("PublicKeyType", Enum, public_key_type_ed25519: 0)
+
+  comment(~S"""
   === xdr source ============================================================
 
       enum SignerKeyType
@@ -3836,14 +3966,15 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("SignerKeyType", Enum,
     signer_key_type_ed25519: 0,
     signer_key_type_pre_auth_tx: 1,
     signer_key_type_hash_x: 2
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union PublicKey switch (PublicKeyType type)
@@ -3853,19 +3984,20 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("PublicKey", Union,
     switch_type: "PublicKeyType",
     switch_name: :type,
     switches: [
-      {:public_key_type_ed25519, :ed25519},
+      {:public_key_type_ed25519, :ed25519}
     ],
     arms: [
-      ed25519: "Uint256",
+      ed25519: "Uint256"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       union SignerKey switch (SignerKeyType type)
@@ -3881,50 +4013,54 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
+  """)
+
   define_type("SignerKey", Union,
     switch_type: "SignerKeyType",
     switch_name: :type,
     switches: [
       {:signer_key_type_ed25519, :ed25519},
       {:signer_key_type_pre_auth_tx, :pre_auth_tx},
-      {:signer_key_type_hash_x, :hash_x},
+      {:signer_key_type_hash_x, :hash_x}
     ],
     arms: [
       ed25519: "Uint256",
       pre_auth_tx: "Uint256",
-      hash_x: "Uint256",
+      hash_x: "Uint256"
     ]
   )
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef opaque Signature<64>;
 
   ===========================================================================
-  """
+  """)
+
   define_type("Signature", VariableOpaque, 64)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef opaque SignatureHint[4];
 
   ===========================================================================
-  """
+  """)
+
   define_type("SignatureHint", Opaque, 4)
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       typedef PublicKey NodeID;
 
   ===========================================================================
-  """
+  """)
+
   define_type("NodeId", "PublicKey")
 
-  comment ~S"""
+  comment(~S"""
   === xdr source ============================================================
 
       struct Curve25519Secret
@@ -3933,12 +4069,11 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("Curve25519Secret", Struct,
-    key: build_type(Opaque, 32)
-  )
+  """)
 
-  comment ~S"""
+  define_type("Curve25519Secret", Struct, key: build_type(Opaque, 32))
+
+  comment(~S"""
   === xdr source ============================================================
 
       struct Curve25519Public
@@ -3947,12 +4082,11 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("Curve25519Public", Struct,
-    key: build_type(Opaque, 32)
-  )
+  """)
 
-  comment ~S"""
+  define_type("Curve25519Public", Struct, key: build_type(Opaque, 32))
+
+  comment(~S"""
   === xdr source ============================================================
 
       struct HmacSha256Key
@@ -3961,12 +4095,11 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("HmacSha256Key", Struct,
-    key: build_type(Opaque, 32)
-  )
+  """)
 
-  comment ~S"""
+  define_type("HmacSha256Key", Struct, key: build_type(Opaque, 32))
+
+  comment(~S"""
   === xdr source ============================================================
 
       struct HmacSha256Mac
@@ -3975,9 +4108,7 @@ defmodule Stellar.XDR do
       };
 
   ===========================================================================
-  """
-  define_type("HmacSha256Mac", Struct,
-    mac: build_type(Opaque, 32)
-  )
+  """)
 
+  define_type("HmacSha256Mac", Struct, mac: build_type(Opaque, 32))
 end

@@ -22,4 +22,3 @@ defmodule XDR.Type.ConstTest do
     end
   end
 end
-

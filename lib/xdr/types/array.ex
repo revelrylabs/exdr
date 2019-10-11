@@ -5,18 +5,25 @@ defmodule XDR.Type.Array do
 
   defstruct type_name: "Array", length: nil, data_type: nil, values: []
 
-  @type t() :: %__MODULE__{type_name: String.t(), length: XDR.Size.t(), data_type: XDR.Type.t(), values: list(XDR.Type.t())}
+  @type t() :: %__MODULE__{
+          type_name: String.t(),
+          length: XDR.Size.t(),
+          data_type: XDR.Type.t(),
+          values: list(XDR.Type.t())
+        }
   @type options() :: [type: XDR.Type.t(), length: XDR.Size.t()]
 
   defimpl XDR.Type do
     def build_type(%{type_name: name} = type, options) do
       data_type = Keyword.get(options, :type)
       length = Keyword.get(options, :length)
+
       unless data_type && XDR.Size.valid?(length) do
         raise XDR.Error,
           message: ":length and :type options required for #{name}",
           type: name
       end
+
       %{type | data_type: data_type, length: length}
     end
 

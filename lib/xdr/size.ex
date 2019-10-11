@@ -2,7 +2,7 @@ defmodule XDR.Size do
   @moduledoc """
   Size utilities for various types
   """
-  @max 0xffffffff
+  @max 0xFFFFFFFF
 
   @typedoc """
   Non-negative, unsigned, 32-bit integers are used for sizes

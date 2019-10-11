@@ -1,6 +1,6 @@
 |            |              |
 | ---------- | ------------ |
-| Package  | ![Elixir Version](https://img.shields.io/badge/Version-0.1.0-yellow) |
+| Package  | ![Elixir Version](https://img.shields.io/badge/Version-0.1.1-yellow) |
 | Support  | ![Elixir Version](https://img.shields.io/badge/Elixir-v1.7%2B-blue) |
 | CI (`master`) | [![Build Status](https://travis-ci.com/revelrylabs/exdr.svg?token=K2LyiUSDgTC1mWqq2YnM&branch=master)](https://travis-ci.com/revelrylabs/exdr) |
 | Coverage | ![Coverage Status](https://opencov.prod.revelry.net/projects/41/badge.svg) |
@@ -24,7 +24,7 @@ Add [`exdr`](https://hex.pm/packages/exdr) to your list of dependencies in `mix.
 ```elixir
 def deps do
   [
-    {:exdr, "~> 0.1.0"}
+    {:exdr, "~> 0.1.1"}
   ]
 end
 ```
@@ -133,7 +133,7 @@ When building complex apps, it's not convenient to have to build up the types
 manually every time time they're needed, so an application can predefine
 its XDR types and compile them into the application. The `XDR.Base` module
 provides the `define_type` macro for registering and accessing application-specific
-types using the `define_type` macro.
+types.
 
 ```elixir
 defmodule MyXDR

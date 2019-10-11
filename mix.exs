@@ -9,12 +9,12 @@ defmodule XDR.MixProject do
   def project do
     [
       app: :exdr,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
@@ -23,12 +23,12 @@ defmodule XDR.MixProject do
       ],
       package: package(),
 
-      #docs
+      # docs
       name: "Elixir XDR",
       source_url: @github,
       homepage_url: @github,
       docs: [
-        main: "README",
+        main: "readme",
         extras: ["README.md"]
       ]
     ]

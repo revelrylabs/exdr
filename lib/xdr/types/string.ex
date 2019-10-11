@@ -9,11 +9,11 @@ defmodule XDR.Type.String do
   defstruct length: nil, max_length: Size.max(), type_name: "String", value: nil
 
   @type t() :: %__MODULE__{
-    length: XDR.Size.t(),
-    max_length: XDR.Size.t(),
-    type_name: String.t(),
-    value: binary()
-  }
+          length: XDR.Size.t(),
+          max_length: XDR.Size.t(),
+          type_name: String.t(),
+          value: binary()
+        }
   @type encoding() :: <<_::_*32>>
 
   defimpl XDR.Type do
@@ -31,6 +31,7 @@ defmodule XDR.Type.String do
           type: type.type_name,
           data: value
       end
+
       VariableOpaque.build_value!(type, value)
     end
 
@@ -39,13 +40,16 @@ defmodule XDR.Type.String do
     end
 
     def decode!(type, encoding_with_length) do
-      {%{value: value} = type_with_value, rest} = VariableOpaque.decode!(type, encoding_with_length)
+      {%{value: value} = type_with_value, rest} =
+        VariableOpaque.decode!(type, encoding_with_length)
+
       if !is_ascii(value) do
         raise XDR.Error,
           message: "Strings can only contain ASCII characters",
           type: type.type_name,
           data: value
       end
+
       {type_with_value, rest}
     end
 

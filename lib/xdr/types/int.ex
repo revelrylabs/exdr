@@ -4,8 +4,8 @@ defmodule XDR.Type.Int do
   """
   defstruct type_name: "Int", value: nil
 
-  @type value() :: -0x80000000..0x7fffffff
-  @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
+  @type value() :: -0x80000000..0x7FFFFFFF
+  @type t() :: %__MODULE__{type_name: String.t(), value: value()}
   @type encoding() :: <<_::32>>
 
   @doc """
