@@ -133,7 +133,7 @@ When building complex apps, it's not convenient to have to build up the types
 manually every time time they're needed, so an application can predefine
 its XDR types and compile them into the application. The `XDR.Base` module
 provides the `define_type` macro for registering and accessing application-specific
-types using the `define_type` macro.
+types.
 
 ```elixir
 defmodule MyXDR

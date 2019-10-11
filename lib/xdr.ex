@@ -125,7 +125,7 @@ defmodule XDR do
 
   Building data types on the fly isn't suitable for a complex problem domain, so
   `XDR.Base` is provided to allow an application to pre-define named XDR types for
-  use throughout the application. See the [readme](#custom-xdr-type-definitions) below for more info.
+  use throughout the application. See the [readme](readme.html#custom-xdr-type-definitions) for more info.
   """
   @spec build_type(XDR.Type.Array, XDR.Type.Array.options()) :: XDR.Type.Array.t()
   @spec build_type(XDR.Type.Bool, ignored()) :: XDR.Type.Bool.t()
@@ -322,15 +322,15 @@ defmodule XDR do
   representation does not contain type info itself, it must be supplied as
   the first parameter.
 
-    iex> encoding = <<0, 0, 0, 6>> <> "abcdef" <> <<0, 0>>
-    ...> {:ok, type_with_value} = XDR.decode(XDR.build_type(XDR.Type.VariableOpaque), encoding)
-    ...> {type_with_value.length, type_with_value.value}
-    {6, "abcdef"}
+      iex> encoding = <<0, 0, 0, 6>> <> "abcdef" <> <<0, 0>>
+      ...> {:ok, type_with_value} = XDR.decode(XDR.build_type(XDR.Type.VariableOpaque), encoding)
+      ...> {type_with_value.length, type_with_value.value}
+      {6, "abcdef"}
 
-    iex> encoding = "abcdef" <> <<0, 0>>
-    ...> {:ok, type_with_value} = XDR.decode(XDR.build_type(XDR.Type.Opaque, 6), encoding)
-    ...> {type_with_value.length, type_with_value.value}
-    {6, "abcdef"}
+      iex> encoding = "abcdef" <> <<0, 0>>
+      ...> {:ok, type_with_value} = XDR.decode(XDR.build_type(XDR.Type.Opaque, 6), encoding)
+      ...> {type_with_value.length, type_with_value.value}
+      {6, "abcdef"}
 
   As with `XDR.build_value/2` above, we're accessing the values directly inside
   the type structs. A more practical way to access inner values is to use `XDR.extract_value/1`.

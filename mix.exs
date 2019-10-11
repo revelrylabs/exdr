@@ -28,7 +28,7 @@ defmodule XDR.MixProject do
       source_url: @github,
       homepage_url: @github,
       docs: [
-        main: "README",
+        main: "readme",
         extras: ["README.md"]
       ]
     ]
