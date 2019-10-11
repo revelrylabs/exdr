@@ -20,4 +20,3 @@ defmodule XDR.Type.UnsignedIntTest do
     assert error.message == "Invalid value"
   end
 end
-

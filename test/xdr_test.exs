@@ -11,20 +11,24 @@ defmodule XDRTest do
       int_type = XDR.build_type(XDR.Type.Int)
       name_type = XDR.build_type(XDR.Type.VariableOpaque)
       five_ints_type = XDR.build_type(XDR.Type.Array, type: int_type, length: 5)
-      student_type = XDR.build_type(XDR.Type.Struct,
-        name: name_type,
-        quiz_scores: five_ints_type,
-        homework_scores: five_ints_type
-      )
+
+      student_type =
+        XDR.build_type(XDR.Type.Struct,
+          name: name_type,
+          quiz_scores: five_ints_type,
+          homework_scores: five_ints_type
+        )
 
       # build value
       {:ok, single_score} = XDR.build_value(int_type, 92)
       {:ok, single_name} = XDR.build_value(name_type, "Student A")
-      {:ok, student_a} = XDR.build_value(student_type,
-        name: "Student A",
-        quiz_scores: [100, 93, 60, 88, 100],
-        homework_scores: [66, 80, 100, 99, 0]
-      )
+
+      {:ok, student_a} =
+        XDR.build_value(student_type,
+          name: "Student A",
+          quiz_scores: [100, 93, 60, 88, 100],
+          homework_scores: [66, 80, 100, 99, 0]
+        )
 
       # encode
       {:ok, single_score_encoding} = XDR.encode(single_score)

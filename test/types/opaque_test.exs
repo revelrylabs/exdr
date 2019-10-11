@@ -20,5 +20,3 @@ defmodule XDR.Type.OpaqueTest do
     assert error.message == "value must be 3 bytes"
   end
 end
-
-

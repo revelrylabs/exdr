@@ -3,4 +3,4 @@
 # run tests
 # make sure to run bin/ci_setup first
 
-mix coveralls.json
+mix format --check-formatted && mix coveralls.json

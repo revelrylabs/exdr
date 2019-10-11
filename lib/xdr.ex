@@ -142,7 +142,8 @@ defmodule XDR do
   @spec build_type(XDR.Type.Union, XDR.Type.Union.options()) :: XDR.Type.Union.t()
   @spec build_type(XDR.Type.UnsignedHyperInt, ignored()) :: XDR.Type.UnsignedHyperInt.t()
   @spec build_type(XDR.Type.UnsignedInt, ignored()) :: XDR.Type.UnsignedInt.t()
-  @spec build_type(XDR.Type.VariableArray, XDR.Type.VariableArray.options()) :: XDR.Type.VariableArray.t()
+  @spec build_type(XDR.Type.VariableArray, XDR.Type.VariableArray.options()) ::
+          XDR.Type.VariableArray.t()
   @spec build_type(XDR.Type.VariableOpaque, XDR.Size.t() | []) :: XDR.Type.VariableOpaque.t()
   @spec build_type(XDR.Type.Void, ignored()) :: XDR.Type.Void.t()
   def build_type(type, options \\ []) do
@@ -233,21 +234,33 @@ defmodule XDR do
 
   """
   @spec build_value(XDR.Type.Array.t(), list()) :: {:ok, XDR.Type.Array.t()} | {:error, any()}
-  @spec build_value(XDR.Type.Bool.t(), XDR.Type.Bool.value()) :: {:ok, XDR.Type.Bool.t()} | {:error, any()}
-  @spec build_value(XDR.Type.Double.t(), XDR.Type.Double.value()) :: {:ok, XDR.Type.Double.t()} | {:error, any()}
+  @spec build_value(XDR.Type.Bool.t(), XDR.Type.Bool.value()) ::
+          {:ok, XDR.Type.Bool.t()} | {:error, any()}
+  @spec build_value(XDR.Type.Double.t(), XDR.Type.Double.value()) ::
+          {:ok, XDR.Type.Double.t()} | {:error, any()}
   @spec build_value(XDR.Type.Enum.t(), atom()) :: {:ok, XDR.Type.Enum.t()} | {:error, any()}
-  @spec build_value(XDR.Type.Float.t(), XDR.Type.Float.value()) :: {:ok, XDR.Type.Float.t()} | {:error, any()}
-  @spec build_value(XDR.Type.HyperInt.t(), XDR.Type.HyperInt.value()) :: {:ok, XDR.Type.HyperInt.t()} | {:error, any()}
-  @spec build_value(XDR.Type.Int.t(), XDR.Type.Int.value()) :: {:ok, XDR.Type.Int.t()} | {:error, any()}
+  @spec build_value(XDR.Type.Float.t(), XDR.Type.Float.value()) ::
+          {:ok, XDR.Type.Float.t()} | {:error, any()}
+  @spec build_value(XDR.Type.HyperInt.t(), XDR.Type.HyperInt.value()) ::
+          {:ok, XDR.Type.HyperInt.t()} | {:error, any()}
+  @spec build_value(XDR.Type.Int.t(), XDR.Type.Int.value()) ::
+          {:ok, XDR.Type.Int.t()} | {:error, any()}
   @spec build_value(XDR.Type.Opaque.t(), binary()) :: {:ok, XDR.Type.Opaque.t()} | {:error, any()}
-  @spec build_value(XDR.Type.Optional.t(), XDR.Type.Optional.value()) :: {:ok, XDR.Type.Optional.t()} | {:error, any()}
+  @spec build_value(XDR.Type.Optional.t(), XDR.Type.Optional.value()) ::
+          {:ok, XDR.Type.Optional.t()} | {:error, any()}
   @spec build_value(XDR.Type.String.t(), binary()) :: {:ok, XDR.Type.String.t()} | {:error, any()}
-  @spec build_value(XDR.Type.Struct.t(), keyword()) :: {:ok, XDR.Type.Struct.t()} | {:error, any()}
-  @spec build_value(XDR.Type.Union.t(), XDR.Type.Union.value()) :: {:ok, XDR.Type.Union.t()} | {:error, any()}
-  @spec build_value(XDR.Type.UnsignedHyperInt.t(), XDR.Type.UnsignedHyperInt.value()) :: {:ok, XDR.Type.UnsignedHyperInt.t()} | {:error, any()}
-  @spec build_value(XDR.Type.UnsignedInt.t(), XDR.Type.UnsignedInt.value()) :: {:ok, XDR.Type.UnsignedInt.t()} | {:error, any()}
-  @spec build_value(XDR.Type.VariableArray.t(), list()) :: {:ok, XDR.Type.VariableArray.t()} | {:error, any()}
-  @spec build_value(XDR.Type.VariableOpaque.t(), binary()) :: {:ok, XDR.Type.VariableOpaque.t()} | {:error, any()}
+  @spec build_value(XDR.Type.Struct.t(), keyword()) ::
+          {:ok, XDR.Type.Struct.t()} | {:error, any()}
+  @spec build_value(XDR.Type.Union.t(), XDR.Type.Union.value()) ::
+          {:ok, XDR.Type.Union.t()} | {:error, any()}
+  @spec build_value(XDR.Type.UnsignedHyperInt.t(), XDR.Type.UnsignedHyperInt.value()) ::
+          {:ok, XDR.Type.UnsignedHyperInt.t()} | {:error, any()}
+  @spec build_value(XDR.Type.UnsignedInt.t(), XDR.Type.UnsignedInt.value()) ::
+          {:ok, XDR.Type.UnsignedInt.t()} | {:error, any()}
+  @spec build_value(XDR.Type.VariableArray.t(), list()) ::
+          {:ok, XDR.Type.VariableArray.t()} | {:error, any()}
+  @spec build_value(XDR.Type.VariableOpaque.t(), binary()) ::
+          {:ok, XDR.Type.VariableOpaque.t()} | {:error, any()}
   def build_value(type, value) do
     {:ok, build_value!(type, value)}
   rescue
@@ -270,8 +283,10 @@ defmodule XDR do
   @spec build_value!(XDR.Type.String.t(), binary()) :: XDR.Type.String.t()
   @spec build_value!(XDR.Type.Struct.t(), keyword()) :: XDR.Type.Struct.t()
   @spec build_value!(XDR.Type.Union.t(), XDR.Type.Union.value()) :: XDR.Type.Union.t()
-  @spec build_value!(XDR.Type.UnsignedHyperInt.t(), XDR.Type.UnsignedHyperInt.value()) :: XDR.Type.UnsignedHyperInt.t()
-  @spec build_value!(XDR.Type.UnsignedInt.t(), XDR.Type.UnsignedInt.value()) :: XDR.Type.UnsignedInt.t()
+  @spec build_value!(XDR.Type.UnsignedHyperInt.t(), XDR.Type.UnsignedHyperInt.value()) ::
+          XDR.Type.UnsignedHyperInt.t()
+  @spec build_value!(XDR.Type.UnsignedInt.t(), XDR.Type.UnsignedInt.value()) ::
+          XDR.Type.UnsignedInt.t()
   @spec build_value!(XDR.Type.VariableArray.t(), list()) :: XDR.Type.VariableArray.t()
   @spec build_value!(XDR.Type.VariableOpaque.t(), binary()) :: XDR.Type.VariableOpaque.t()
   def build_value!(type, %Const{value: value}) do

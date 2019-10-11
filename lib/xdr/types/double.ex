@@ -5,7 +5,7 @@ defmodule XDR.Type.Double do
   defstruct type_name: "Double", value: nil
 
   @type value() :: float()
-  @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
+  @type t() :: %__MODULE__{type_name: String.t(), value: value()}
   @type encoding() :: <<_::64>>
 
   @doc """
@@ -61,5 +61,3 @@ defmodule XDR.Type.Double do
     end
   end
 end
-
-

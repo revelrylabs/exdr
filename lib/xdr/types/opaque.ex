@@ -7,10 +7,10 @@ defmodule XDR.Type.Opaque do
   defstruct length: nil, type_name: "Opaque", value: nil
 
   @type t() :: %__MODULE__{
-    length: XDR.Size.t(),
-    value: binary(),
-    type_name: String.t()
-  }
+          length: XDR.Size.t(),
+          value: binary(),
+          type_name: String.t()
+        }
   @type encoding() :: <<_::_*32>>
 
   defimpl XDR.Type do
@@ -74,4 +74,3 @@ defmodule XDR.Type.Opaque do
     end
   end
 end
-

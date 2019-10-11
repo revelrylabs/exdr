@@ -4,8 +4,8 @@ defmodule XDR.Type.HyperInt do
   """
   defstruct type_name: "HyperInt", value: nil
 
-  @type value() :: -0x80000000_00000000..0x7fffffff_ffffffff
-  @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
+  @type value() :: -0x80000000_00000000..0x7FFFFFFF_FFFFFFFF
+  @type t() :: %__MODULE__{type_name: String.t(), value: value()}
   @type encoding() :: <<_::64>>
 
   @doc """

@@ -7,11 +7,11 @@ defmodule XDR.Type.VariableArray do
   defstruct type_name: "VariableArray", data_type: nil, max_length: Size.max(), values: []
 
   @type t() :: %__MODULE__{
-    type_name: String.t(),
-    data_type: XDR.Type.t(),
-    max_length: XDR.Size.t(),
-    values: list(XDR.Type.t())
-  }
+          type_name: String.t(),
+          data_type: XDR.Type.t(),
+          max_length: XDR.Size.t(),
+          values: list(XDR.Type.t())
+        }
   @type options() :: [type: XDR.Type.key(), max_length: XDR.Size.t()]
 
   defimpl XDR.Type do

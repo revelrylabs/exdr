@@ -18,20 +18,20 @@ defmodule XDR.Type.Union do
   @type switch_value() :: atom() | integer()
   @type switch() :: {switch_value(), atom() | XDR.Void | XDR.Void.t()}
   @type options() :: [
-    arms: keyword(XDR.Type.t()),
-    switch_name: String.t() | atom(),
-    switch_type: XDR.Type.t(),
-    switches: list(switch()),
-    default_arm: atom()
-  ]
+          arms: keyword(XDR.Type.t()),
+          switch_name: String.t() | atom(),
+          switch_type: XDR.Type.t(),
+          switches: list(switch()),
+          default_arm: atom()
+        ]
   @type t() :: %__MODULE__{
-    arms: list(XDR.Type.t()),
-    switches: list(switch()),
-    switch_name: String.t() | atom() | nil,
-    type_name: String.t(),
-    default_arm: atom() | nil,
-    value: XDR.Type.t()
-  }
+          arms: list(XDR.Type.t()),
+          switches: list(switch()),
+          switch_name: String.t() | atom() | nil,
+          type_name: String.t(),
+          default_arm: atom() | nil,
+          value: XDR.Type.t()
+        }
   @type value() :: {switch_value(), any()} | switch_value()
 
   def validate_type_options!(options) do

@@ -4,8 +4,8 @@ defmodule XDR.Type.UnsignedInt do
   """
   defstruct type_name: "UnsignedInt", value: nil
 
-  @type value() :: 0..0xffffffff
-  @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
+  @type value() :: 0..0xFFFFFFFF
+  @type t() :: %__MODULE__{type_name: String.t(), value: value()}
   @type encoding() :: <<_::32>>
 
   @doc """

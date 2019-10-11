@@ -7,7 +7,7 @@ defmodule XDR.Type.Bool do
   defstruct type_name: "Bool", value: nil
 
   @type value() :: boolean()
-  @type t() :: %__MODULE__{ type_name: String.t(), value: value()}
+  @type t() :: %__MODULE__{type_name: String.t(), value: value()}
   @type encoding() :: <<_::32>>
 
   defimpl XDR.Type do

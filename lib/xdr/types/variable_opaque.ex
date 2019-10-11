@@ -7,11 +7,11 @@ defmodule XDR.Type.VariableOpaque do
   defstruct length: nil, max_length: Size.max(), type_name: "VariableOpaque", value: nil
 
   @type t() :: %__MODULE__{
-    length: XDR.Size.t(),
-    max_length: XDR.Size.t(),
-    type_name: String.t(),
-    value: binary()
-  }
+          length: XDR.Size.t(),
+          max_length: XDR.Size.t(),
+          type_name: String.t(),
+          value: binary()
+        }
   @type encoding() :: <<_::_*32>>
 
   defimpl XDR.Type do
