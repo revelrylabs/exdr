@@ -21,6 +21,24 @@ defmodule XDR.Error do
     prepend_path(wrap(error), path_segment)
   end
 
+  @doc """
+  Call a function and wrap any resulting error with the given path segment
+  metadata. Used to make errors easier to trace back when working with types
+  that have subsidiary child types
+  """
+  @spec wrap_call(atom(), list(), atom() | binary()) :: any()
+  def wrap_call(function, args, path_segment) do
+    wrap_call(XDR, function, args, path_segment)
+  end
+
+  @spec wrap_call(atom(), atom(), list(), atom() | binary()) :: any()
+  def wrap_call(module, function, args, path_segment)
+      when is_atom(module) and is_atom(function) and is_list(args) do
+    apply(module, function, args)
+  rescue
+    error -> reraise wrap(error, path_segment), __STACKTRACE__
+  end
+
   defp prepend_path(%XDR.Error{path: nil} = error, path_segment) do
     %{error | path: path_segment}
   end
