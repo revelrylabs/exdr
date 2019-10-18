@@ -88,6 +88,7 @@ defmodule XDR.Type.Union do
 
   defimpl XDR.Type do
     alias XDR.Type.Union
+    alias XDR.Error
 
     def build_type(type, options) do
       Union.validate_type_options!(options)
@@ -105,15 +106,23 @@ defmodule XDR.Type.Union do
     def resolve_type!(type, %{} = custom_types) do
       arms =
         type.arms
-        |> Enum.map(&resolve_type_wrap(&1, custom_types, :arms))
+        |> Enum.map(fn {key, sub_type} ->
+          {key, Error.wrap_call(XDR.Type, :resolve_type!, [sub_type, custom_types], [key, :arms])}
+        end)
 
-      switch_type = resolve_type_wrap(type.switch, custom_types, :switch_type)
+      switch_type =
+        Error.wrap_call(
+          XDR.Type,
+          :resolve_type!,
+          [type.switch, custom_types],
+          :switch_type
+        )
 
       %{type | arms: arms, switch: switch_type}
     end
 
     def build_value!(type, {switch_raw, arm_raw}) do
-      switch_value = build_value_wrap(type.switch, switch_raw, :switch_value)
+      switch_value = Error.wrap_call(:build_value!, [type.switch, switch_raw], :switch_value)
 
       value =
         Union.get_value_type(type, switch_value)
@@ -130,7 +139,7 @@ defmodule XDR.Type.Union do
     end
 
     def encode!(%{switch: switch_value, value: value}) do
-      switch_encoding = encode_wrap(switch_value, :switch_value)
+      switch_encoding = Error.wrap_call(:encode!, [switch_value], :switch_value)
       value_encoding = XDR.Type.encode!(value)
       switch_encoding <> value_encoding
     end
@@ -141,42 +150,6 @@ defmodule XDR.Type.Union do
       {value, rest} = XDR.Type.decode!(value_type, switch_rest)
 
       {%{type | switch: switch_value, value: value}, rest}
-    end
-
-    # private functions to handle wrapping & propagating errors
-
-    defp wrap_error(error, key) do
-      XDR.Error.wrap(error, key)
-    end
-
-    defp wrap_error(error, key, parent_key) do
-      error
-      |> wrap_error(key)
-      |> wrap_error(parent_key)
-    end
-
-    defp resolve_type_wrap({key, sub_type}, custom_types, parent_key) do
-      {key, XDR.Type.resolve_type!(sub_type, custom_types)}
-    rescue
-      error -> reraise wrap_error(error, key, parent_key), __STACKTRACE__
-    end
-
-    defp resolve_type_wrap(sub_type, custom_types, key) do
-      XDR.Type.resolve_type!(sub_type, custom_types)
-    rescue
-      error -> reraise wrap_error(error, key), __STACKTRACE__
-    end
-
-    defp build_value_wrap(sub_type, value, key) do
-      XDR.build_value!(sub_type, value)
-    rescue
-      error -> reraise wrap_error(error, key), __STACKTRACE__
-    end
-
-    defp encode_wrap(sub_type, key) do
-      XDR.Type.encode!(sub_type)
-    rescue
-      error -> reraise XDR.Error.wrap(error, key), __STACKTRACE__
     end
   end
 end

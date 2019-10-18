@@ -6,24 +6,44 @@ defmodule XDR.ErrorTest do
   defmodule ErrorXDR do
     use XDR.Base
     define_type("name", XDR.Type.VariableOpaque)
+    define_type("short_acct_id", XDR.Type.Opaque, 8)
+    define_type("long_acct_id", XDR.Type.Opaque, 16)
     define_type("five_names", XDR.Type.Array, type: "name", length: 5)
     define_type("some_names", XDR.Type.VariableArray, type: "name")
+
+    define_type(
+      "account_id",
+      Union,
+      switch_name: :type,
+      switch_type: XDR.build_type(XDR.Type.Int),
+      switches: [
+        {-1, XDR.Type.Void},
+        {0, :short},
+        {1, :long}
+      ],
+      arms: [
+        short: "short_acct_id",
+        long: "long_acct_id"
+      ]
+    )
 
     define_type(
       "struct_with_names",
       XDR.Type.Struct,
       five_names: "five_names",
-      some_names: "some_names"
+      some_names: "some_names",
+      account_id: "account_id"
     )
   end
 
-  describe "Nested errors" do
+  describe "Nested, wrapped errors" do
     test "fixed array error on build_value" do
       assert {:error, error} =
                ErrorXDR.build_value(
                  "struct_with_names",
                  five_names: ["Marvin", "Arthur", "Trillian", 123, "Zaphod"],
-                 some_names: ["Marvin"]
+                 some_names: ["Marvin"],
+                 account_id: -1
                )
 
       assert error.path == "five_names.3"
@@ -36,12 +56,39 @@ defmodule XDR.ErrorTest do
                ErrorXDR.build_value(
                  "struct_with_names",
                  five_names: ["Marvin", "Arthur", "Trillian", "Ford", "Zaphod"],
-                 some_names: ["Marvin", :nobody]
+                 some_names: ["Marvin", :nobody],
+                 account_id: -1
                )
 
       assert error.path == "some_names.1"
       assert error.data == :nobody
       assert error.type == "name"
+    end
+
+    test "union error on switch" do
+      assert {:error, error} =
+               ErrorXDR.build_value(
+                 "struct_with_names",
+                 five_names: ["Marvin", "Arthur", "Trillian", "Ford", "Zaphod"],
+                 some_names: ["Marvin"],
+                 account_id: {"abc", "123456"}
+               )
+
+      assert error.path == "account_id.switch_value"
+      assert error.data == "abc"
+    end
+
+    test "union error on main value" do
+      assert {:error, error} =
+               ErrorXDR.build_value(
+                 "struct_with_names",
+                 five_names: ["Marvin", "Arthur", "Trillian", "Ford", "Zaphod"],
+                 some_names: ["Marvin"],
+                 account_id: {1, "123456"}
+               )
+
+      assert error.path == "account_id"
+      assert error.data == "123456"
     end
 
     test "variable array error on decode" do
