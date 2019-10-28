@@ -77,8 +77,7 @@ defmodule XDR.Type.VariableArray do
       {length, encoding} = Size.decode!(full_encoding)
 
       {reversed_values, rest} =
-        0..(length - 1)
-        |> Enum.reduce({[], encoding}, fn index, {vals, prev_rest} ->
+        Enum.reduce(0..(length - 1), {[], encoding}, fn index, {vals, prev_rest} ->
           {current_value, next_rest} =
             Error.wrap_call(XDR.Type, :decode!, [data_type, prev_rest], index)
 

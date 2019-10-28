@@ -105,8 +105,7 @@ defmodule XDR.Type.Union do
 
     def resolve_type!(type, %{} = custom_types) do
       arms =
-        type.arms
-        |> Enum.map(fn {key, sub_type} ->
+        Enum.map(type.arms, fn {key, sub_type} ->
           {key, Error.wrap_call(XDR.Type, :resolve_type!, [sub_type, custom_types], [key, :arms])}
         end)
 
@@ -123,10 +122,8 @@ defmodule XDR.Type.Union do
 
     def build_value!(type, {switch_raw, arm_raw}) do
       switch_value = Error.wrap_call(:build_value!, [type.switch, switch_raw], :switch_value)
-
-      value =
-        Union.get_value_type(type, switch_value)
-        |> XDR.build_value!(arm_raw)
+      value_type = Union.get_value_type(type, switch_value)
+      value = XDR.build_value!(value_type, arm_raw)
 
       %{type | switch: switch_value, value: value}
     end

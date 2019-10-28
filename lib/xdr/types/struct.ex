@@ -16,8 +16,7 @@ defmodule XDR.Type.Struct do
 
     def resolve_type!(type, %{} = custom_types) do
       resolved_fields =
-        type.fields
-        |> Enum.map(fn {key, sub_type} ->
+        Enum.map(type.fields, fn {key, sub_type} ->
           {key, Error.wrap_call(XDR.Type, :resolve_type!, [sub_type, custom_types], key)}
         end)
 
@@ -26,8 +25,7 @@ defmodule XDR.Type.Struct do
 
     def build_value!(type, values) when is_list(values) do
       built_fields =
-        type.fields
-        |> Enum.map(fn {key, sub_type} ->
+        Enum.map(type.fields, fn {key, sub_type} ->
           {key, Error.wrap_call(:build_value!, [sub_type, values[key]], key)}
         end)
 
@@ -36,8 +34,7 @@ defmodule XDR.Type.Struct do
 
     def extract_value!(%{fields: fields}) do
       field_values =
-        fields
-        |> Enum.map(fn {key, sub_value} ->
+        Enum.map(fields, fn {key, sub_value} ->
           {key, Error.wrap_call(:extract_value!, [sub_value], key)}
         end)
 
