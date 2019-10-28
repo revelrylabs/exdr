@@ -15,6 +15,8 @@ defmodule XDR.Type.VariableArray do
   @type options() :: [type: XDR.Type.key(), max_length: XDR.Size.t()]
 
   defimpl XDR.Type do
+    alias XDR.Error
+
     def build_type(type, type: data_type, max_length: max_length) when is_integer(max_length) do
       %{type | data_type: data_type, max_length: max_length}
     end
@@ -33,18 +35,28 @@ defmodule XDR.Type.VariableArray do
         )
         when is_list(raw_values) do
       if length(raw_values) > max_length do
-        raise XDR.Error,
+        raise Error,
           message: "Input values too long, expected a max of #{max_length} values",
           type: name,
           data: raw_values
       end
 
-      values = Enum.map(raw_values, fn value -> XDR.build_value!(data_type, value) end)
+      values =
+        raw_values
+        |> Enum.with_index()
+        |> Enum.map(fn {value, index} ->
+          Error.wrap_call(:build_value!, [data_type, value], index)
+        end)
+
       %{type | values: values}
     end
 
     def extract_value!(%{values: values}) do
-      Enum.map(values, fn value -> XDR.Type.extract_value!(value) end)
+      values
+      |> Enum.with_index()
+      |> Enum.map(fn {type_with_value, index} ->
+        Error.wrap_call(:extract_value!, [type_with_value], index)
+      end)
     end
 
     def encode!(%{values: values}) do
@@ -52,7 +64,10 @@ defmodule XDR.Type.VariableArray do
 
       encoded_values =
         values
-        |> Enum.map(&XDR.Type.encode!/1)
+        |> Enum.with_index()
+        |> Enum.map(fn {type_with_value, index} ->
+          Error.wrap_call(:encode!, [type_with_value], index)
+        end)
         |> Enum.join()
 
       encoded_length <> encoded_values
@@ -62,9 +77,10 @@ defmodule XDR.Type.VariableArray do
       {length, encoding} = Size.decode!(full_encoding)
 
       {reversed_values, rest} =
-        1..length
-        |> Enum.reduce({[], encoding}, fn _, {vals, prev_rest} ->
-          {current_value, next_rest} = XDR.Type.decode!(data_type, prev_rest)
+        Enum.reduce(0..(length - 1), {[], encoding}, fn index, {vals, prev_rest} ->
+          {current_value, next_rest} =
+            Error.wrap_call(XDR.Type, :decode!, [data_type, prev_rest], index)
+
           {[current_value | vals], next_rest}
         end)
 

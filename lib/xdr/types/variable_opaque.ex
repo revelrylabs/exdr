@@ -46,8 +46,8 @@ defmodule XDR.Type.VariableOpaque do
       end
     end
 
-    def build_value!(%{type_name: type}, _) do
-      raise XDR.Error, message: "value must be a binary", type: type
+    def build_value!(%{type_name: type}, value) do
+      raise XDR.Error, message: "value must be a binary", type: type, data: value
     end
 
     def extract_value!(%{value: value}), do: value
