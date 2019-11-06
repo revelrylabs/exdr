@@ -1,11 +1,13 @@
 defmodule XDR.Base do
   @moduledoc """
-  Provides the ability to predefine and precompile specific XDR types for your application.
+  Provides the ability to predefine and precompile specific XDR types for your
+  application.
 
   Create a module in your app, and `use XDR.Base`.
 
-  Your module will now have access to the `define_type` macro, as well as all of the
-  functions on the main `XDR` module. See [the README](readme.html#custom-xdr-type-definitions) for an example.
+  Your module will now have access to the `define_type` macro, as well as all
+  of the functions on the main `XDR` module.
+  See [the README](readme.html#custom-xdr-type-definitions) for an example.
 
   """
 
@@ -52,7 +54,8 @@ defmodule XDR.Base do
       defdelegate encode(type_with_value), to: XDR
 
       @doc """
-      Like `encode/1`, but returns binary on success instead of a tuple, and raises on failure.
+      Like `encode/1`, but returns binary on success instead of a tuple,
+      and raises on failure.
       See `XDR.encode!/1` for more details.
       """
       @spec encode!(XDR.Type.t()) :: binary()
@@ -60,8 +63,8 @@ defmodule XDR.Base do
 
       @doc """
       XDR data structures created from `build_value/2` and `decode/2` include
-      lots of type metadata, and the different types don't always store their inner
-      state in the same way. `extract_value/1` acts as a uniform way to pull
+      lots of type metadata, and the different types don't always store their
+      inner state in the same way. `extract_value/1` acts as a uniform way to pull
       out the underlying values as native elixir types.
       See `XDR.extract_value/1` for more details.
       """
@@ -69,7 +72,8 @@ defmodule XDR.Base do
       defdelegate extract_value(type_with_value), to: XDR
 
       @doc """
-      Like `extract_value/1`, but returns an XDR type success instead of a tuple, and raises on failure.
+      Like `extract_value/1`, but returns an XDR type success instead of a
+      tuple, and raises on failure.
       See `XDR.extract_value!/1` for more details.
       """
       @spec extract_value!(XDR.Type.t()) :: any()
@@ -95,7 +99,8 @@ defmodule XDR.Base do
       end
 
       @doc """
-      Like `resolve_type/1`, but returns an XDR type on success instead of a tuple, and raises on failure.
+      Like `resolve_type/1`, but returns an XDR type on success instead of a
+      tuple, and raises on failure.
       """
       @spec resolve_type!(XDR.Type.t()) :: XDR.Type.t()
       def resolve_type!(name_or_type) do
@@ -121,7 +126,8 @@ defmodule XDR.Base do
       end
 
       @doc """
-      Like `build_value/2`, but returns an XDR type on success instead of a tuple, and raises on failure.
+      Like `build_value/2`, but returns an XDR type on success instead of a
+      tuple, and raises on failure.
       See `XDR.build_value!/2` for more details.
       """
       @spec build_value!(XDR.Type.t(), any()) :: XDR.Type.t()
@@ -131,8 +137,8 @@ defmodule XDR.Base do
       end
 
       @doc """
-      To build a concrete value, supply the type or custom type name and a value appropriate
-      to that type's definition.
+      To build a concrete value, supply the type or custom type name and a value
+      appropriate to that type's definition.
       See `XDR.build_value/2` for more details.
       """
       @spec build_value(XDR.Type.t(), any()) :: {:ok, XDR.Type.t()} | {:error, any()}
@@ -188,8 +194,9 @@ defmodule XDR.Base do
 
   @doc """
   Define a named XDR type for your application by providing a name and type info.
-  Once defined in your module, you can use type type name instead of a fully built XDR type
-  in your module's functions such as `build_value/2` and `decode/1`.
+  Once defined in your module, you can use type type name instead of a fully
+  built XDR type in your module's functions such as `build_value/2` and
+  `decode/1`.
 
   The second and third arguments are the same as the first and second
   arguments of `XDR.build_type/2`.
@@ -213,7 +220,8 @@ defmodule XDR.Base do
   end
 
   @doc """
-  Convenience function to build an XDR type, allowing the use of custom defined type names.
+  Convenience function to build an XDR type, allowing the use of custom defined
+  type names.
 
   See `XDR.build_type/2`
   """
