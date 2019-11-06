@@ -164,7 +164,7 @@ defmodule MyXDR
 end
 
 # using the predefined types in our code
-{:ok, student_b} = MyXDR.build_value!("Student",
+{:ok, student_b} = MyXDR.build_value("Student",
   name: "Student B",
   quiz_scores: [93, 60, 88, 100, 84],
   homework_scores: [80, 100, 99, 0, 90]
