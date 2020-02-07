@@ -19,4 +19,29 @@ defmodule XDR.Type.OpaqueTest do
     assert {:error, error} = XDR.build_value(type, "1234")
     assert error.message == "value must be 3 bytes"
   end
+
+  test "errors on unreasonable length", %{len3: _type} do
+    too_long = 1 + XDR.Size.max()
+    too_short = -1 * XDR.Size.max()
+
+    assert_raise XDR.Error, "length must be between 0 and 4294967295 [0, 4294967295]", fn ->
+      XDR.build_type(Opaque, too_long)
+    end
+
+    assert_raise XDR.Error, "length must be between 0 and 4294967295 [0, 4294967295]", fn ->
+      XDR.build_type(Opaque, too_short)
+    end
+  end
+
+  test "errors on incorrect type", %{len3: type} do
+    assert_raise XDR.Error, "value must be a binary", fn ->
+      XDR.build_value!(type, :not_binary)
+    end
+  end
+
+  test "errors on encoding malformed type", %{len3: type} do
+    assert_raise XDR.Error, "missing or malformed value or length", fn ->
+      XDR.encode!(type)
+    end
+  end
 end
