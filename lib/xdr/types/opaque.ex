@@ -17,8 +17,8 @@ defmodule XDR.Type.Opaque do
     def build_type(type, length) when is_integer(length) do
       if not XDR.Size.valid?(length) do
         raise XDR.Error,
-              message: "length must be between 0 and #{Size.max()} [0, #{Size.max()}]",
-              type: type.type_name
+          message: "length must be between 0 and #{Size.max()} [0, #{Size.max()}]",
+          type: type.type_name
       end
 
       %{type | length: length}
