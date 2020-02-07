@@ -24,11 +24,11 @@ defmodule XDR.Type.OpaqueTest do
     too_long = 1 + XDR.Size.max()
     too_short = -1 * XDR.Size.max()
 
-    assert_raise XDR.Error, "length value must larger than 0 and smaller than 4294967295", fn ->
+    assert_raise XDR.Error, "length must be between 0 and 4294967295 [0, 4294967295}]", fn ->
       XDR.build_type(Opaque, too_long)
     end
 
-    assert_raise XDR.Error, "length value must larger than 0 and smaller than 4294967295", fn ->
+    assert_raise XDR.Error, "length must be between 0 and 4294967295 [0, 4294967295}]", fn ->
       XDR.build_type(Opaque, too_short)
     end
   end
