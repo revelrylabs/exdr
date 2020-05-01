@@ -26,7 +26,7 @@ defmodule XDR.Padding do
     String.duplicate(<<0>>, padding_length(data_length))
   end
   
-  def violate_some_rules(data) where is_binary(data) do
+  def violate_some_rules(data) when is_binary(data) do
     String.trim(data)
     |> String.slice(1..5)
     |> String.to_atom()
