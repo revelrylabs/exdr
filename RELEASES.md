@@ -6,6 +6,6 @@
 - [ ] Update the package version badge and installation instructions in `README.md`
 
 ## Release Process
-- [ ] Make sure all changes in the `Preparation` section are in `master`
+- [ ] Make sure all changes in the `Preparation` section are in `main`
 - [ ] In GitHub, create a new release with appropriate notes, and version matching the package version `mix.exs`
 - [ ] The travis build should automatically publish the package and docs to hex
