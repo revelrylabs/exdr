@@ -2,7 +2,7 @@
 | ---------- | ------------ |
 | Package  | ![Elixir Version](https://img.shields.io/badge/Version-0.1.1-yellow) |
 | Support  | ![Elixir Version](https://img.shields.io/badge/Elixir-v1.7%2B-blue) |
-| CI (`master`) | [![Build Status](https://travis-ci.com/revelrylabs/exdr.svg?token=K2LyiUSDgTC1mWqq2YnM&branch=master)](https://travis-ci.com/revelrylabs/exdr) |
+| CI (`main`) | [![Build Status](https://travis-ci.com/revelrylabs/exdr.svg?token=K2LyiUSDgTC1mWqq2YnM&branch=main)](https://travis-ci.com/revelrylabs/exdr) |
 | Coverage | ![Coverage Status](https://opencov.prod.revelry.net/projects/41/badge.svg) |
 
 # XDR
